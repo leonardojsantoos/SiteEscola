@@ -37,7 +37,7 @@ body.center {
   width: 100%;
   max-width: 480px; /* deixa o card maior */
   background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(40px);
+  backdrop-filter: blur(45px);
   border-radius: 16px;
   padding: 50px 35px;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -129,7 +129,7 @@ body.center {
 /* Cards */
 .card {
   background: var(--glass);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(20px);
   border-radius: 16px;
   padding: 25px;
   border: 1px solid var(--border);
@@ -230,4 +230,48 @@ td input:focus {
   .aluno-container table {
     font-size: 13px;
   }
+}
+/* Logo */
+.logo {
+  width: 100px;
+  height: 100%;
+}
+
+/* Melhorias login */
+
+.card-login {
+  transition: 0.3s;
+}
+
+.card-login:hover {
+  transform: translateY(-5px);
+}
+
+.card-login input {
+  transition: 0.2s;
+}
+
+.card-login input:focus {
+  box-shadow: 0 0 0 2px rgba(108,92,231,0.4);
+}
+
+/* Botão loading */
+.card-login button.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Mensagem */
+.login-msg {
+  font-size: 13px;
+  min-height: 18px;
+  text-align: left;
+}
+
+.login-msg.erro {
+  color: #ff6b6b;
+}
+
+.login-msg.sucesso {
+  color: #00ff88;
 }

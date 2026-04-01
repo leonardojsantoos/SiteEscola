@@ -8,11 +8,13 @@
 </head>
 <body class="center">
   <div class="card-login">
+    <img src="img/logo.png" alt="" class="logo">
     <h2>Sistema Escolar</h2>
     <p>Acesse sua conta</p>
     <form onsubmit="login(event)">
       <input type="email" id="email" placeholder="Email" required />
       <input type="password" id="password" placeholder="Senha" required />
+      <div id="login-msg" class="login-msg"></div>
       <button type="submit">Entrar</button>
     </form>
   </div>
