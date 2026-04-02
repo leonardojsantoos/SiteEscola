@@ -1,55 +1,61 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-  <meta charset="UTF-8" />
-  <title>Sistema Escolar - Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="css/style.css" />
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
-  <div class="header">
-    <h2 id="titulo"></h2>
-    <button class="logout" onclick="logout()">Sair</button>
+
+<div class="header">
+  <h2 id="titulo"></h2>
+  <button onclick="logout()">Sair</button>
+</div>
+
+<div class="container grid">
+
+  <div class="card">
+    <h3>Selecionar Turma</h3>
+    <select id="turmaSelect" onchange="carregarTurma()"></select>
   </div>
 
-  <!-- Container principal -->
-  <div class="container" id="container-principal">
-    <!-- Painel lateral do professor -->
-    <div id="painel-professor" class="card card-small" style="display:none;">
-      <h3>Adicionar Aluno</h3>
-      <form onsubmit="event.preventDefault(); adicionarAluno();">
-        <input id="nomeAluno" placeholder="Nome do aluno" autocomplete="off" />
-        <button type="submit">Adicionar</button>
-      </form>
-    </div>
+  <div id="painel-professor" class="card">
+    <h3>Gerenciar</h3>
 
-    <!-- Boletim -->
-    <div id="boletim-container" class="card card-wide aluno-container">
-      <h3>Boletim</h3>
-      <div class="table-responsive">
-        <table id="tabela">
-          <thead>
-            <tr>
-              <th>Aluno</th>
-              <th>Bimestre 1</th>
-              <th>Bimestre 2</th>
-              <th>Bimestre 3</th>
-              <th>Bimestre 4</th>
-              <th>Faltas</th>
-              <th>Média Anual</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
+    <input id="nomeTurma" placeholder="Nova turma">
+    <button onclick="criarTurma()">Criar Turma</button>
+
+    <input id="nomeMateria" placeholder="Matéria">
+    <button onclick="addMateria()">Adicionar Matéria</button>
+
+    <input id="nomeAluno" placeholder="Aluno">
+    <button onclick="addAluno()">Adicionar Aluno</button>
   </div>
 
-  <script src="js/db.js"></script>
-  <script src="js/app.js"></script>
+  <div class="card card-wide">
+    <h3>Boletim</h3>
+
+    <table id="tabela">
+      <thead>
+        <tr>
+          <th>Aluno</th>
+          <th>Matéria</th>
+          <th>B1</th>
+          <th>B2</th>
+          <th>B3</th>
+          <th>B4</th>
+          <th>Média</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+
 </body>
-
 </html>

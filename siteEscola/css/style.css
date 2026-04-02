@@ -1,277 +1,186 @@
-/* Variáveis de cores */
 :root {
   --roxo: #6C5CE7;
   --roxo-dark: #4b3fcf;
-  --bg: linear-gradient(135deg, #6C5CE7, #a29bfe);
+  --bg-aluno: url('../img/bg-aluno.jpg') no-repeat center/cover;
+  --bg-professor: url('../img/bg-professor.jpg') no-repeat center/cover;
   --glass: rgba(255, 255, 255, 0.12);
   --border: rgba(255, 255, 255, 0.2);
+  --text: #2d3436;
 }
 
-/* Reset e padrão */
+/* RESET */
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
+
+/* BODY */
 body {
   font-family: 'Segoe UI', sans-serif;
   min-height: 100vh;
-  background: var(--bg);
-}
-
-body.center {
-  display: flex;
-  justify-content: flex-end; /* alinha à direita */
-  align-items: center;
-  min-height: 100vh;
-  background: url('../img/cadastrobackground.png') no-repeat center center;
-  background-size: cover;
-  font-family: 'Segoe UI', sans-serif;
-  padding-right: 250px; /* espaçamento da borda direita */
-  padding-left: 40px;  /* deixa espaço à esquerda */
-}
-
-.card-login {
-  height: 100%;
-  max-height: 600px;
-  width: 100%;
-  max-width: 480px; /* deixa o card maior */
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(45px);
-  border-radius: 16px;
-  padding: 50px 35px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  text-align: center;
-}
-
-/* Títulos e texto do login */
-.card-login h2 {
-  margin-bottom: 10px;
   color: white;
 }
-.card-login p {
-  margin-bottom: 20px;
-  color: rgba(255,255,255,0.8);
+
+body.aluno { background: var(--bg-aluno); }
+body.professor { background: var(--bg-professor); }
+
+/* LOGIN CENTRAL LADO DIREITO */
+body.center {
+  display: flex;
+  justify-content: flex-end; /* cards no lado direito */
+  align-items: center;
+  padding-right: 120px; /* distância da borda direita */
+  padding-left: 20px;   /* espaço mínimo da esquerda */
+  min-height: 100vh;
 }
 
-/* Formulário */
-.card-login form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+/* CARD LOGIN / CADASTRO / TIPO */
+.card-login {
+  width: 480px;
+  max-width: 95%;
+  padding: 50px 40px;
+  background: var(--glass);
+  backdrop-filter: blur(30px);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
+
+.card-login:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.35);
+}
+
+/* LOGO */
+.card-login .logo {
+  width: 120px;
+  margin-bottom: 25px;
+}
+
+/* TITULO */
+.card-login h2 {
+  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+/* INPUTS */
 .card-login input {
   width: 100%;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 15px;
+  border-radius: 10px;
   border: none;
   outline: none;
-  font-size: 14px;
+  font-size: 15px;
 }
+
+/* BOTÃO PRINCIPAL */
 .card-login button {
-  padding: 12px;
-  border-radius: 8px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
   border: none;
   background: white;
   color: var(--roxo);
   font-weight: bold;
+  font-size: 16px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: all 0.3s ease;
 }
+
 .card-login button:hover {
   background: var(--roxo-dark);
   color: white;
   transform: translateY(-2px);
 }
 
-/* DASHBOARD */
-.header {
-  width: 100%;
-  background: rgba(0,0,0,0.2);
-  backdrop-filter: blur(10px);
-  padding: 15px 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: white;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-}
-.logout {
-  background: #ff4d4d;
-  color: white;
-  padding: 8px 15px;
-  border-radius: 8px;
-  border: none;
+/* LINK DE TEXTO */
+.card-login p {
+  margin-top: 20px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.8);
   cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.3s, transform 0.2s;
+}
+
+.card-login p:hover {
+  color: var(--roxo);
+  transform: translateY(-1px);
+}
+
+.card-login p:active {
+  transform: translateY(0);
+}
+
+/* BOTÕES TIPO “Sou Aluno / Sou Professor” */
+.tipo-btn {
+  width: 220px;
+  padding: 14px 0;
+  margin: 10px 0;
+  border-radius: 12px;
+  border: none;
+  background: rgba(255,255,255,0.15);
+  color: rgb(241, 5, 163);
   font-weight: bold;
-  transition: 0.2s;
-}
-.logout:hover {
-  background: #e60000;
-}
-
-/* Container e grid */
-.container {
-  max-width: 1200px;
-  margin: 20px auto;
-  padding: 20px;
-}
-.grid {
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-/* Cards */
+.tipo-btn:hover {
+  background: var(--roxo);
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(108,92,231,0.4);
+}
+
+.tipo-btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* CARDS DO DASHBOARD */
 .card {
   background: var(--glass);
-  backdrop-filter: blur(20px);
-  border-radius: 16px;
   padding: 25px;
-  border: 1px solid var(--border);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-}
-.card h3 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  color: white;
+  border-radius: 18px;
+  backdrop-filter: blur(20px);
+  transition: transform 0.3s;
 }
 
-/* Tabela */
-.card-wide {
-  max-width: 100%;
-  overflow-x: auto;
+.card:hover {
+  transform: translateY(-4px);
 }
+
+/* TABELA */
 table {
   width: 100%;
   border-collapse: collapse;
+  background: white;
+  color: black;
   border-radius: 10px;
   overflow: hidden;
-  margin-top: 15px;
-  font-size: 14px;
-  background-color: white;
-  color: #333;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
-thead tr {
-  background: #6C5CE7;
+
+thead {
+  background: var(--roxo);
   color: white;
 }
-th, td {
-  padding: 10px 12px;
+
+td, th {
+  padding: 10px;
   text-align: center;
-  border-bottom: 1px solid #ddd;
 }
+
 tr:hover {
   background: #f1f1f1;
 }
-td input {
-  width: 50px;
-  padding: 6px;
-  text-align: center;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  outline: none;
-  font-size: 14px;
-  transition: border-color 0.2s;
-}
-td input:focus {
-  border-color: var(--roxo);
-}
 
-/* Status */
-.aprovado {
-  color: #00ff88;
-  font-weight: bold;
-}
-.reprovado {
-  color: #ff4d4d;
-  font-weight: bold;
-}
-
-/* Responsividade */
-@media (max-width: 900px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-  .card {
-    max-width: 100%;
-  }
-  .card-login {
-    max-width: 90%;
-    padding: 20px;
-  }
-  table, th, td {
-    font-size: 12px;
-    padding: 8px;
-  }
-  td input {
-    width: 40px;
-  }
-}
-
-/* Container aluno */
-.aluno-container {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 20px;
-}
-.aluno-container table {
-  width: 100% !important;
-}
-@media (max-width: 900px) {
-  .aluno-container {
-    margin: 20px 10px;
-  }
-  .aluno-container table {
-    font-size: 13px;
-  }
-}
-/* Logo */
-.logo {
-  width: 100px;
-  height: 100%;
-}
-
-/* Melhorias login */
-
-.card-login {
-  transition: 0.3s;
-}
-
-.card-login:hover {
-  transform: translateY(-5px);
-}
-
-.card-login input {
-  transition: 0.2s;
-}
-
-.card-login input:focus {
-  box-shadow: 0 0 0 2px rgba(108,92,231,0.4);
-}
-
-/* Botão loading */
-.card-login button.loading {
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-/* Mensagem */
-.login-msg {
-  font-size: 13px;
-  min-height: 18px;
-  text-align: left;
-}
-
-.login-msg.erro {
-  color: #ff6b6b;
-}
-
-.login-msg.sucesso {
-  color: #00ff88;
-}
+/* STATUS */
+.aprovado { color: #00d084; font-weight: bold; }
+.reprovado { color: #ff4d4d; font-weight: bold; }
