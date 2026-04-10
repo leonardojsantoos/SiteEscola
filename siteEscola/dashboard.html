@@ -5,6 +5,7 @@
   <title>Dashboard</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
 <div class="header">
@@ -12,49 +13,55 @@
   <button onclick="logout()">Sair</button>
 </div>
 
-<div class="container grid">
+<div class="container">
 
-  <div class="card">
-    <h3>Selecionar Turma</h3>
-    <select id="turmaSelect" onchange="carregarTurma()"></select>
-  </div>
+  <div class="grid">
 
-  <div id="painel-professor" class="card">
-    <h3>Gerenciar</h3>
+    <div class="card">
+      <h3>Turma</h3>
+      <select id="turmaSelect" onchange="render()"></select>
+    </div>
 
-    <input id="nomeTurma" placeholder="Nova turma">
-    <button onclick="criarTurma()">Criar Turma</button>
+    <div id="painel-professor" class="card">
+      <h3>Professor</h3>
 
-    <input id="nomeMateria" placeholder="Matéria">
-    <button onclick="addMateria()">Adicionar Matéria</button>
+      <input id="nomeTurma" placeholder="Turma">
+      <button onclick="criarTurma()">Criar</button>
 
-    <input id="nomeAluno" placeholder="Aluno">
-    <button onclick="addAluno()">Adicionar Aluno</button>
-  </div>
+      <input id="nomeMateria" placeholder="Matéria">
+      <button onclick="addMateria()">Adicionar</button>
 
-  <div class="card card-wide">
-    <h3>Boletim</h3>
+      <input id="nomeAluno" placeholder="Aluno">
+      <button onclick="addAluno()">Adicionar</button>
+    </div>
 
-    <table id="tabela">
-      <thead>
-        <tr>
-          <th>Aluno</th>
-          <th>Matéria</th>
-          <th>B1</th>
-          <th>B2</th>
-          <th>B3</th>
-          <th>B4</th>
-          <th>Média</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <div class="card card-wide">
+      <h3>Boletim</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Aluno</th>
+            <th>Matéria</th>
+            <th>B1</th>
+            <th>B2</th>
+            <th>B3</th>
+            <th>B4</th>
+            <th>Média</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+    </div>
+
   </div>
 
 </div>
 
 <script src="js/db.js"></script>
+<script src="js/theme.js"></script>
 <script src="js/app.js"></script>
 
 </body>

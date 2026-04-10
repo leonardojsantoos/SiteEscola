@@ -1,56 +1,51 @@
-// Pega tipo de usuário definido anteriormente
-const tipoUsuario = localStorage.getItem("tipo"); // "aluno" ou "professor"
+document.addEventListener("DOMContentLoaded", () => {
 
-// Se for professor, remove campo de código
-const codigoInput = document.getElementById("codigoTurma");
-if(tipoUsuario === "professor"){
-  codigoInput.style.display = "none";
-  codigoInput.required = false;
-}
+  document.getElementById("formCadastro").addEventListener("submit", (e) => {
+    e.preventDefault();
 
-// Formulário de cadastro
-const form = document.getElementById("formCadastro");
-form.addEventListener("submit", function(e){
-  e.preventDefault();
+    const nome = document.getElementById("nome").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const senha = document.getElementById("senha").value.trim();
+    const codigo = document.getElementById("codigoTurma").value.trim();
 
-  const nome = document.getElementById("nome").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const senha = document.getElementById("senha").value.trim();
-  const codigo = document.getElementById("codigoTurma").value.trim();
+    let user;
 
-  // Validação
-  if(!nome || !email || !senha){
-    alert("Preencha todos os campos!");
-    return;
-  }
-  if(tipoUsuario === "aluno" && !codigo){
-    alert("Digite o código da turma!");
-    return;
-  }
+    if (codigo) {
 
-  // Pega usuários existentes
-  let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-  if(usuarios.some(u => u.email === email)){
-    alert("Email já cadastrado!");
-    return;
-  }
+      const turma = DB.getTurmaPorCodigo(codigo);
 
-  const novoUsuario = {
-    nome,
-    email,
-    senha,
-    tipo: tipoUsuario,
-    turma: tipoUsuario === "aluno" ? codigo : null
-  };
+      if (!turma) {
+        alert("Código da turma inválido");
+        return;
+      }
 
-  usuarios.push(novoUsuario);
-  localStorage.setItem("usuarios", JSON.stringify(usuarios));
+      user = {
+        nome,
+        email,
+        senha,
+        role: "aluno",
+        turma: turma.nome
+      };
 
-  alert("Cadastro realizado com sucesso!");
-  window.location.href = "login.html";
+      DB.addAluno(turma.nome, nome);
+
+    } else {
+      user = {
+        nome,
+        email,
+        senha,
+        role: "docente"
+      };
+    }
+
+    DB.addUsuario(user);
+
+    alert("Cadastro realizado!");
+    location.href = "login.html";
+  });
+
 });
 
-// Redireciona para login
-function irLogin(){
-  window.location.href = "login.html";
+function irLogin() {
+  location.href = "login.html";
 }

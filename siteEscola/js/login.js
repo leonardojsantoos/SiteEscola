@@ -1,33 +1,32 @@
-// login.js
+document.addEventListener("DOMContentLoaded", () => {
 
-// Função para redirecionar ao cadastro
-function irCadastro() {
-  window.location.href = "cadastro.html";
-}
+  const form = document.getElementById("formLogin");
+  const criar = document.getElementById("criarConta");
 
-// Vincula o click do "Criar conta"
-document.getElementById("criarConta").addEventListener("click", irCadastro);
-
-// Formulário de login
-const form = document.getElementById("formLogin");
-form.addEventListener("submit", function(e) {
-  e.preventDefault();
-
-  const email = document.getElementById("email").value.trim();
-  const senha = document.getElementById("senha").value.trim();
-
-  // Pega usuários cadastrados
-  const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-  const user = usuarios.find(u => u.email === email && u.senha === senha);
-
-  if (!user) {
-    alert("Email ou senha inválidos!");
-    return;
+  if (criar) {
+    criar.addEventListener("click", () => {
+      location.href = "cadastro.html";
+    });
   }
 
-  // Salva usuário logado
-  localStorage.setItem("usuarioLogado", JSON.stringify(user));
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-  // Redireciona para dashboard
-  window.location.href = "dashboard.html";
+    const email = document.getElementById("email").value.trim();
+    const senha = document.getElementById("senha").value.trim();
+
+    const user = DB.getUsuarios().find(u =>
+      u.email === email && u.senha === senha
+    );
+
+    if (!user) {
+      alert("Login inválido");
+      return;
+    }
+
+    localStorage.setItem("user", JSON.stringify(user));
+
+    location.href = "dashboard.html";
+  });
+
 });

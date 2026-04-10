@@ -2,26 +2,25 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema Escolar - Quem é você?</title>
+  <title>Escolha</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="center aluno"> <!-- 'aluno' ou 'professor' muda o background -->
 
-  <div class="card-login">
-    <h2 style="text-align:center; margin-bottom:25px;">Quem é você?</h2>
+<body class="center aluno">
 
-    <div style="display:flex; flex-direction:column; gap:20px; align-items:center;">
-      <button onclick="tipo('aluno')" class="tipo-btn">Aluno</button>
-      <button onclick="tipo('professor')" class="tipo-btn"> Professor</button>
-    </div>
-  </div>
+<div class="card-login">
+  <h2>Quem é você?</h2>
 
-  <script>
-    function tipo(t) {
-      localStorage.setItem("tipo", t);
-      window.location.href = "login.html";
-    }
-  </script>
+  <button class="tipo-btn" onclick="setTipo('aluno')">Aluno</button>
+  <button class="tipo-btn" onclick="setTipo('professor')">Professor</button>
+</div>
+
+<script>
+function setTipo(tipo){
+  localStorage.setItem("role_temp", tipo);
+  location.href = "login.html";
+}
+</script>
+
 </body>
 </html>

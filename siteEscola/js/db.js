@@ -35,43 +35,8 @@ const DB = (() => {
     return data.turmas.find(t => t.nome === nome);
   }
 
-  function addMateria(turmaNome, materia) {
-    const turma = getTurma(turmaNome);
-
-    if (!turma.materias.includes(materia)) {
-      turma.materias.push(materia);
-
-      turma.alunos.forEach(aluno => {
-        aluno.notas[materia] = { b1: 0, b2: 0, b3: 0, b4: 0 };
-      });
-
-      salvar();
-    }
-  }
-
-  function addAluno(turmaNome, nome) {
-    const turma = getTurma(turmaNome);
-
-    const notas = {};
-    turma.materias.forEach(m => {
-      notas[m] = { b1: 0, b2: 0, b3: 0, b4: 0 };
-    });
-
-    turma.alunos.push({
-      nome,
-      notas,
-      faltas: 0
-    });
-
-    salvar();
-  }
-
-  function updateNota(turmaNome, alunoNome, materia, campo, valor) {
-    const turma = getTurma(turmaNome);
-    const aluno = turma.alunos.find(a => a.nome === alunoNome);
-
-    aluno.notas[materia][campo] = valor;
-    salvar();
+  function getTurmaPorCodigo(codigo) {
+    return data.turmas.find(t => t.codigo === codigo);
   }
 
   function addUsuario(user) {
@@ -83,20 +48,50 @@ const DB = (() => {
     return data.usuarios;
   }
 
-  function getTurmaPorCodigo(codigo) {
-    return data.turmas.find(t => t.codigo === codigo);
+  function addAluno(turmaNome, nome) {
+    const turma = getTurma(turmaNome);
+    if (!turma) return;
+
+    const notas = {};
+    turma.materias.forEach(m => {
+      notas[m] = { b1: 0, b2: 0, b3: 0, b4: 0 };
+    });
+
+    turma.alunos.push({ nome, notas });
+    salvar();
+  }
+
+  function addMateria(turmaNome, materia) {
+    const turma = getTurma(turmaNome);
+    if (!turma) return;
+
+    if (!turma.materias.includes(materia)) {
+      turma.materias.push(materia);
+
+      turma.alunos.forEach(a => {
+        a.notas[materia] = { b1: 0, b2: 0, b3: 0, b4: 0 };
+      });
+
+      salvar();
+    }
+  }
+
+  function updateNota(turma, aluno, materia, campo, valor) {
+    const t = getTurma(turma);
+    const a = t.alunos.find(x => x.nome === aluno);
+    a.notas[materia][campo] = Number(valor);
+    salvar();
   }
 
   return {
     criarTurma,
     getTurmas,
     getTurma,
-    addMateria,
-    addAluno,
-    updateNota,
+    getTurmaPorCodigo,
     addUsuario,
     getUsuarios,
-    getTurmaPorCodigo
+    addAluno,
+    addMateria,
+    updateNota
   };
-
 })();

@@ -1,16 +1,14 @@
 const user = JSON.parse(localStorage.getItem("user"));
-if (!user) location.href = "login.html";
+
+if (!user) {
+  location.href = "login.html";
+}
 
 const turmaSelect = document.getElementById("turmaSelect");
-const tabelaBody = document.querySelector("#tabela tbody");
-const painelProfessor = document.getElementById("painel-professor");
+const tbody = document.querySelector("tbody");
 
 document.getElementById("titulo").textContent =
   `Bem-vindo, ${user.nome}`;
-
-if (user.role !== "docente") {
-  painelProfessor.style.display = "none";
-}
 
 function carregarTurmas() {
   turmaSelect.innerHTML = "";
@@ -18,18 +16,18 @@ function carregarTurmas() {
   DB.getTurmas().forEach(t => {
     const opt = document.createElement("option");
     opt.value = t.nome;
-    opt.textContent = t.nome;
+    opt.textContent = `${t.nome} (${t.codigo})`;
     turmaSelect.appendChild(opt);
   });
 
-  carregarTurma();
+  render();
 }
 
-function carregarTurma() {
-  const nome = turmaSelect.value;
-  const turma = DB.getTurma(nome);
+function render() {
+  const turma = DB.getTurma(turmaSelect.value);
+  if (!turma) return;
 
-  tabelaBody.innerHTML = "";
+  tbody.innerHTML = "";
 
   turma.alunos.forEach(aluno => {
 
@@ -37,9 +35,8 @@ function carregarTurma() {
 
     Object.keys(aluno.notas).forEach(materia => {
 
-      const notas = aluno.notas[materia];
-      const media = (notas.b1 + notas.b2 + notas.b3 + notas.b4) / 4;
-      const status = media >= 6 ? "Aprovado" : "Reprovado";
+      const n = aluno.notas[materia];
+      const media = (n.b1 + n.b2 + n.b3 + n.b4) / 4;
 
       const tr = document.createElement("tr");
 
@@ -51,50 +48,38 @@ function carregarTurma() {
           <td>
             ${
               user.role === "docente"
-              ? `<input type="number" value="${notas[b]}" 
-                 onchange="editarNota('${nome}','${aluno.nome}','${materia}','${b}', this.value)">`
-              : notas[b]
+              ? `<input type="number" value="${n[b]}"
+                onchange="DB.updateNota('${turma.nome}','${aluno.nome}','${materia}','${b}',this.value);render()">`
+              : n[b]
             }
           </td>
         `).join("")}
 
-        <td><strong>${media.toFixed(2)}</strong></td>
-        <td class="${media >= 6 ? 'aprovado' : 'reprovado'}">${status}</td>
+        <td>${media.toFixed(1)}</td>
+        <td>${media >= 6 ? "Aprovado" : "Reprovado"}</td>
       `;
 
-      tabelaBody.appendChild(tr);
+      tbody.appendChild(tr);
     });
-
   });
 }
 
+// ações professor
 function criarTurma() {
   const nome = document.getElementById("nomeTurma").value;
   const codigo = DB.criarTurma(nome);
-  alert("Código da turma: " + codigo);
+  alert("Código: " + codigo);
   carregarTurmas();
 }
 
 function addMateria() {
-  const nome = turmaSelect.value;
-  const materia = document.getElementById("nomeMateria").value;
-  DB.addMateria(nome, materia);
-  carregarTurma();
+  DB.addMateria(turmaSelect.value, document.getElementById("nomeMateria").value);
+  render();
 }
 
 function addAluno() {
-  const nomeTurma = turmaSelect.value;
-  const aluno = document.getElementById("nomeAluno").value.toLowerCase();
-  DB.addAluno(nomeTurma, aluno);
-  carregarTurma();
-}
-
-function editarNota(turma, aluno, materia, campo, valor) {
-  valor = parseFloat(valor) || 0;
-  valor = Math.min(Math.max(valor, 0), 10);
-
-  DB.updateNota(turma, aluno, materia, campo, valor);
-  carregarTurma();
+  DB.addAluno(turmaSelect.value, document.getElementById("nomeAluno").value);
+  render();
 }
 
 function logout() {
