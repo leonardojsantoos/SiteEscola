@@ -2,10 +2,9 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard</title>
+  <title>Dashboard Escolar</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
 
 <div class="header">
@@ -14,50 +13,65 @@
 </div>
 
 <div class="container">
-
   <div class="grid">
-
+    
     <div class="card">
       <h3>Turma</h3>
-      <select id="turmaSelect" onchange="render()"></select>
+      <select id="turmaSelect" onchange="atualizarSeletores()"></select>
+      
+      <div id="exibirCodigoTurma" style="margin-top: 15px; font-size: 13px; font-weight: bold; color: var(--roxo);"></div>
     </div>
-
+  
     <div id="painel-professor" class="card">
-      <h3>Professor</h3>
+      <h3>Lançar Dados (Modo Planilha)</h3>
+      <label>Aluno</label>
+      <select id="alunoSelect"></select>
+      
+      <label>Matéria</label>
+      <select id="materiaSelect"></select>
+  
+      <div class="grid-notas-excel">
+          <input type="number" id="notaB1" placeholder="B1" min="0" max="10">
+          <input type="number" id="notaB2" placeholder="B2" min="0" max="10">
+          <input type="number" id="notaB3" placeholder="B3" min="0" max="10">
+          <input type="number" id="notaB4" placeholder="B4" min="0" max="10">
+          <input type="number" id="faltasInput" placeholder="Faltas" min="0">
+      </div>
+      
+      <button onclick="salvarNotas()" style="width: 100%;">Atualizar Células</button>
 
-      <input id="nomeTurma" placeholder="Turma">
-      <button onclick="criarTurma()">Criar</button>
-
-      <input id="nomeMateria" placeholder="Matéria">
-      <button onclick="addMateria()">Adicionar</button>
-
-      <input id="nomeAluno" placeholder="Aluno">
-      <button onclick="addAluno()">Adicionar</button>
-    </div>
+      <hr style="margin: 20px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.1);">
+      
+      <h3>Gerenciar Estrutura</h3>
+      <input id="nomeTurma" placeholder="Nova Turma">
+      <button onclick="criarTurma()">Criar Turma</button>
+      <br><br>
+      <input id="nomeMateria" placeholder="Nova Matéria">
+      <button onclick="addMateria()">Add Matéria</button>
+      <br><br>
+      <input id="nomeAluno" placeholder="Novo Aluno">
+      <button onclick="addAluno()">Add Aluno</button>
+    </div> 
 
     <div class="card card-wide">
-      <h3>Boletim</h3>
-
+      <h3>Boletim Geral</h3>
       <table>
         <thead>
           <tr>
-            <th>Aluno</th>
-            <th>Matéria</th>
-            <th>B1</th>
-            <th>B2</th>
-            <th>B3</th>
-            <th>B4</th>
-            <th>Média</th>
-            <th>Status</th>
+            <th>Disciplina</th>
+            <th style="text-align: center;">B1</th>
+            <th style="text-align: center;">B2</th>
+            <th style="text-align: center;">B3</th>
+            <th style="text-align: center;">B4</th>
+            <th style="text-align: center;">Faltas</th>
+            <th style="text-align: center;">Média</th>
+            <th style="text-align: center;">Situação</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody id="boletim-corpo"></tbody>
       </table>
-
     </div>
-
   </div>
-
 </div>
 
 <script src="js/db.js"></script>

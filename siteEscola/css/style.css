@@ -1,482 +1,201 @@
 :root {
   --roxo: #6C5CE7;
   --roxo-dark: #4b3fcf;
-  --bg-aluno: url('../img/bg-aluno.jpg') no-repeat center/cover;
-  --bg-professor: url('../img/bg-professor.jpg') no-repeat center/cover;
-  --glass: rgba(255, 255, 255, 0.12);
-  --border: rgba(255, 255, 255, 0.2);
-  --text: #2d3436;
+  --text-white: #ffffff;
+  --bg-aluno: url('../img/bg-aluno.jpg');
+  --bg-professor: url('../img/bg-professor.jpg');
 }
 
-/* RESET */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* RESET E BASE */
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
 }
 
-/* BODY */
 body {
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   min-height: 100vh;
-  color: white;
+  color: var(--text-white);
+  background-color: #0f1115;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: background 0.5s ease-in-out;
 }
 
-body.aluno { background: var(--bg-aluno); }
-body.professor { background: var(--bg-professor); }
+/* CLASSES DE FUNDO (Login/Cadastro/Index) */
+body.aluno { background-image: var(--bg-aluno) !important; }
+body.professor { background-image: var(--bg-professor) !important; }
 
-/* LOGIN CENTRAL LADO DIREITO */
+/* FUNDO NEUTRO (Dashboard) */
+body:not(.aluno):not(.professor):not(.center) {
+  background: #121417 !important;
+  background-image: none !important;
+}
+
+/* POSICIONAMENTO DO CARD (Login/Cadastro) */
 body.center {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-end; /* Card à direita */
   align-items: center;
-  padding-right: 120px;
-  padding-left: 20px;
-  min-height: 100vh;
+  padding-right: 10%;
 }
 
-/* CARD LOGIN */
+/* CARD LOGIN/CADASTRO (Glassmorphism) */
 .card-login {
-  width: 430px;
-  max-width: 92%;
-  padding: 48px 38px;
-
-  background: rgba(48, 47, 48, 0.72); /* MAIS LEGÍVEL */
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-
-  border-radius: 22px;
-
-  border: 1px solid rgba(255, 255, 255, 0.10);
-
-  box-shadow:
-    0 30px 70px rgba(0, 0, 0, 0.60),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-
-  text-align: left;
-
-  color: #fff;
-
-  position: relative;
-  overflow: hidden;
-
-  transition: all 0.3s ease;
-}
-
-/* brilho suave */
-.card-login::before {
-  content: "";
-  position: absolute;
-  top: -60%;
-  left: -60%;
-  width: 220%;
-  height: 220%;
-
-  background: radial-gradient(
-    circle at top left,
-    rgba(108,92,231,0.15),
-    transparent 65%
-  );
-
-  pointer-events: none;
-}
-
-.card-login:hover {
-  transform: translateY(-8px);
-
-  box-shadow:
-    0 40px 90px rgba(0, 0, 0, 0.65),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-/* LOGO */
-.card-login .logo {
-  width: 110px;
-  margin: 0 auto 18px auto;
-  display: block;
-  filter: drop-shadow(0 10px 18px rgba(0,0,0,0.45));
-}
-
-/* TITULO */
-.card-login h2 {
-  font-size: 28px;
-  font-weight: 800;
-  color: #ffffff;
-  margin-bottom: 10px;
-  letter-spacing: 0.4px;
-}
-
-/* INPUTS */
-.card-login input {
   width: 100%;
-  padding: 13px 14px;
-  margin-bottom: 12px;
-
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.12);
-
-  background: rgba(255,255,255,0.08);
-  color: #fff;
-
-  outline: none;
-
-  font-size: 14px;
-
-  transition: all 0.25s ease;
+  max-width: 400px;
+  padding: 40px;
+  background: rgba(15, 15, 15, 0.85);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.6);
 }
 
-.card-login input::placeholder {
-  color: rgba(255,255,255,0.55);
+.logo { 
+  width: 110px; 
+  margin: 0 auto 20px auto; 
+  display: block; 
 }
 
-.card-login input:focus {
-  border-color: var(--roxo);
-  background: rgba(255,255,255,0.12);
-  box-shadow: 0 0 0 3px rgba(108,92,231,0.25);
+/* FORMULÁRIOS */
+label { 
+  display: block; 
+  margin-bottom: 8px; 
+  font-size: 14px; 
+  color: rgba(255, 255, 255, 0.9); 
 }
 
-/* BOTÃO */
-.card-login button {
+input, select {
   width: 100%;
   padding: 14px;
-
+  margin-bottom: 20px;
   border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--text-white);
+  outline: none;
+  transition: 0.3s;
+}
+
+input:focus, select:focus {
+  border-color: var(--roxo);
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* BOTÕES */
+button {
+  cursor: pointer;
   border: none;
-
-  background: linear-gradient(135deg, #6C5CE7, #4b3fcf);
-  color: white;
-
-  font-weight: 600;
-  font-size: 15px;
-
-  cursor: pointer;
-
-  box-shadow: 0 12px 28px rgba(108,92,231,0.35);
-
-  transition: all 0.25s ease;
-}
-
-.card-login button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 18px 35px rgba(108,92,231,0.45);
-}
-
-.card-login button:active {
-  transform: scale(0.98);
-}
-
-/* TEXTO */
-.card-login p {
-  margin-top: 16px;
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(255,255,255,0.85);
-
-  cursor: pointer;
-
-  transition: all 0.2s ease;
-}
-
-.card-login p:hover {
-  color: var(--roxo);
-  text-decoration: underline;
-}
-
-/* BOTÕES TIPO */
-.tipo-btn {
-  width: 220px;
-  padding: 14px 0;
-  margin: 10px 0;
-
   border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.15);
-
-  background: rgba(255,255,255,0.10);
-  color: white;
-
   font-weight: bold;
-  font-size: 15px;
-
-  cursor: pointer;
-
-  transition: all 0.3s ease;
+  text-transform: uppercase;
+  transition: 0.3s;
+  color: var(--text-white);
+  background: linear-gradient(135deg, var(--roxo), var(--roxo-dark));
 }
 
-.tipo-btn:hover {
-  background: var(--roxo);
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(108,92,231,0.4);
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(108, 92, 231, 0.4);
 }
 
-/* CARDS DASHBOARD */
-.card {
-  background: var(--glass);
-  padding: 25px;
-  border-radius: 18px;
-  backdrop-filter: blur(20px);
-  transition: transform 0.3s;
-}
+/* Botões específicos */
+.card-login button { width: 100%; padding: 16px; margin-top: 10px; }
+.header button { width: auto; padding: 10px 25px; background: #ff4d4d; }
 
-.card:hover {
-  transform: translateY(-4px);
-}
-
-/* TABELA */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  color: black;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-thead {
-  background: var(--roxo);
-  color: white;
-}
-
-td, th {
-  padding: 10px;
-  text-align: center;
-}
-
-tr:hover {
-  background: #f1f1f1;
-}
-
-/* STATUS */
-.aprovado { color: #00d084; font-weight: bold; }
-.reprovado { color: #ff4d4d; font-weight: bold; }
-
-/* INPUT NUMBER */
-input[type="number"]{
-  width: 60px;
-  padding: 5px;
-  border-radius: 6px;
-  border: none;
-  text-align: center;
-}
-
-/* SELECT */
-select {
-  width: 100%;
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-}
-
-.link-text {
-  margin-top: 18px;
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(255,255,255,0.75);
-  cursor: pointer;
-  text-align: center;
-  transition: all 0.2s ease;
-  user-select: none;
-}
-
-.link-text:hover {
-  color: var(--roxo);
-  text-decoration: underline;
-}
-
-/* HEADER */
+/* DASHBOARD */
 .header {
-  width: 100%;
-  padding: 18px 30px;
+  padding: 20px 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  background: rgba(0,0,0,0.35);
+  background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(15px);
-
-  color: white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.header button {
-  padding: 10px 18px;
-  border-radius: 10px;
-  border: none;
-  background: var(--roxo);
-  color: white;
-  cursor: pointer;
-}
+.container { max-width: 1200px; margin: 0 auto; padding: 40px; }
+.grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
 
-/* CONTAINER */
-.container {
-  padding: 25px;
-}
-
-/* GRID DO DASHBOARD */
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-/* CARD GRANDE */
-.card-wide {
-  grid-column: 1 / -1;
-}
-
-/* INPUTS DO DASH */
-.card input,
-.card select {
-  width: 100%;
-  margin-bottom: 10px;
-}
-
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-}
-
-/* FUNDO PADRÃO DO DASHBOARD */
-body:not(.aluno):not(.professor) {
-  background: #0f1115;
-}
-
-/* HEADER FIXO BONITO */
-.header {
-  width: 100%;
-  padding: 16px 40px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  background: rgba(0,0,0,0.45);
-  backdrop-filter: blur(15px);
-
-  color: white;
-
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.header h2 {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.header button {
-  padding: 10px 16px;
-  border-radius: 10px;
-  border: none;
-
-  background: var(--roxo);
-  color: white;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-/* CENTRALIZA TUDO */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 30px;
-}
-
-/* GRID PROFISSIONAL */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 20px;
-}
-
-/* CARDS */
 .card {
   grid-column: span 6;
-
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(18px);
-
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 16px;
-
-  padding: 20px;
-
-  color: white;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 25px;
 }
 
-.card-wide {
-  grid-column: span 12;
-}
+.card-wide { grid-column: span 12; }
 
-/* TITULOS DOS CARDS */
-.card h3 {
-  margin-bottom: 12px;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-/* INPUTS */
-.card input,
-.card select {
-  width: 100%;
-  padding: 10px;
-
-  margin-bottom: 10px;
-
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.15);
-
-  background: rgba(0,0,0,0.25);
-  color: white;
-}
-
-/* BOTÕES DO DASH */
-.card button {
-  width: 100%;
-  padding: 10px;
-
-  border-radius: 10px;
-  border: none;
-
-  background: var(--roxo);
-  color: white;
-
-  font-weight: 600;
-  cursor: pointer;
-
-  margin-bottom: 10px;
-}
-
-/* TABELA PROFISSIONAL */
+/* TABELA ESTILO EXCEL (PLANILHA) */
 table {
   width: 100%;
   border-collapse: collapse;
-  overflow: hidden;
-
-  border-radius: 12px;
+  margin-top: 15px;
+  background: rgba(255, 255, 255, 0.02);
 }
 
-thead {
-  background: var(--roxo);
-  color: white;
-}
-
-td, th {
-  padding: 10px;
-  text-align: center;
+th, td {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 12px;
   font-size: 13px;
 }
 
-tbody tr {
-  background: rgba(255,255,255,0.05);
+th {
+  background-color: rgba(108, 92, 231, 0.2);
+  color: #a29bfe;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
-tbody tr:hover {
-  background: rgba(255,255,255,0.1);
+tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.02); }
+tbody tr:hover { background: rgba(108, 92, 231, 0.08); }
+
+/* GRADE DE ENTRADA DE NOTAS (MODO EXCEL) */
+.grid-notas-excel {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
 }
 
-/* RESPONSIVO */
+.grid-notas-excel input {
+  margin-bottom: 0 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  text-align: center;
+  padding: 15px 5px !important;
+  background: #1a1d21 !important;
+}
+
+.grid-notas-excel input:focus {
+  background: #252930 !important;
+  box-shadow: inset 0 0 8px var(--roxo);
+}
+
+/* UTILITÁRIOS */
+.link-text {
+  margin-top: 25px;
+  text-align: center;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.6);
+  transition: 0.3s;
+}
+
+.link-text:hover { color: var(--text-white); text-decoration: underline; }
+
+/* RESPONSIVIDADE */
 @media (max-width: 900px) {
-  .card {
-    grid-column: span 12;
-  }
+  .card { grid-column: span 12; }
+  body.center { justify-content: center; padding-right: 0; }
+  .header { padding: 15px 20px; }
 }

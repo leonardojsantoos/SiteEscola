@@ -79,9 +79,15 @@ const DB = (() => {
   function updateNota(turma, aluno, materia, campo, valor) {
     const t = getTurma(turma);
     const a = t.alunos.find(x => x.nome === aluno);
+    
+    // Garante que o objeto da matéria existe
+    if (!a.notas[materia]) {
+        a.notas[materia] = { b1: 0, b2: 0, b3: 0, b4: 0, faltas: 0 };
+    }
+    
     a.notas[materia][campo] = Number(valor);
     salvar();
-  }
+}
 
   return {
     criarTurma,

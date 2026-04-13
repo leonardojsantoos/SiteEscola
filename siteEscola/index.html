@@ -18,7 +18,15 @@
 <script>
 function setTipo(tipo){
   localStorage.setItem("role_temp", tipo);
-  location.href = "login.html";
+  
+  // Aplica a classe na hora para disparar a transição do CSS
+  document.body.classList.remove('aluno', 'professor');
+  document.body.classList.add(tipo);
+
+  // Espera a animação de 350ms terminar antes de mudar a URL
+  setTimeout(() => {
+    location.href = "login.html";
+  }, 350);
 }
 </script>
 

@@ -1,13 +1,22 @@
-function aplicarTema() {
-  const user = JSON.parse(localStorage.getItem("user"));
+(function() {
+  function aplicar() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const roleTemp = localStorage.getItem("role_temp");
+    
+    // Se estiver no dashboard, não aplicamos a classe de imagem no body
+    if (window.location.pathname.includes('dashboard.html')) {
+        document.body.classList.remove("aluno", "professor");
+        return; 
+    }
 
-  document.body.classList.remove("aluno", "professor");
-
-  if (user?.role === "docente") {
-    document.body.classList.add("professor");
-  } else {
-    document.body.classList.add("aluno");
+    const role = user?.role || roleTemp;
+    if (role) {
+      document.body.classList.remove("aluno", "professor");
+      const classe = (role === "docente" || role === "professor") ? "professor" : "aluno";
+      document.body.classList.add(classe);
+    }
   }
-}
 
-document.addEventListener("DOMContentLoaded", aplicarTema);
+  aplicar();
+  document.addEventListener("DOMContentLoaded", aplicar);
+})();

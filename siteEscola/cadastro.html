@@ -2,38 +2,37 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Cadastro</title>
+  <title>Cadastro - Sistema Escolar</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body class="center">
+<body class="center aluno">
 
 <div class="card-login">
+  <img src="img/logo.png" class="logo" alt="Logo">
 
-  <img src="img/logo.png" class="logo">
-
-  <h2>Criar conta</h2>
+  <h2>Criar Conta</h2>
+  <p style="color: rgba(255,255,255,0.5); margin-bottom: 20px;">Preencha os dados abaixo</p>
 
   <form id="formCadastro">
-
-    <label>Nome</label>
-    <input type="text" id="nome" required>
+    <label>Nome Completo</label>
+    <input type="text" id="nome" required placeholder="Ex: Leonardo Silva">
 
     <label>Email</label>
-    <input type="email" id="email" required>
+    <input type="email" id="email" required placeholder="exemplo@escola.com">
 
     <label>Senha</label>
-    <input type="password" id="senha" required>
+    <input type="password" id="senha" required placeholder="Crie uma senha">
 
-    <label>Código da turma (aluno)</label>
-    <input type="text" id="codigoTurma">
+    <div id="area-turma">
+      <label>Código da Turma</label>
+      <input type="text" id="codigoTurma" placeholder="Peça o código ao professor">
+    </div>
 
-    <button type="submit">Cadastrar</button>
-
+    <button type="submit">Finalizar Cadastro</button>
   </form>
 
-  <p class="link-text" onclick="irLogin()">Já tenho conta</p>
-
+  <p class="link-text" onclick="window.location.href='login.html'">Já tenho uma conta. <strong>Fazer Login</strong></p>
 </div>
 
 <script src="js/db.js"></script>
