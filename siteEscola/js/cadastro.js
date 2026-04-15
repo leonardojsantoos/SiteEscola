@@ -2,56 +2,64 @@ document.addEventListener("DOMContentLoaded", () => {
   const roleTemp = localStorage.getItem("role_temp");
   const areaTurma = document.getElementById("area-turma");
   const inputCodigo = document.getElementById("codigoTurma");
+  const formCadastro = document.getElementById("formCadastro");
 
-  // Se for professor, esconde o campo de turma
+  // Esconde o campo de código se for Professor
   if (roleTemp === "professor" || roleTemp === "docente") {
     if (areaTurma) areaTurma.style.display = "none";
+    if (inputCodigo) inputCodigo.removeAttribute("required");
   }
 
-  document.getElementById("formCadastro").addEventListener("submit", (e) => {
-    e.preventDefault();
+  if (formCadastro) {
+    formCadastro.addEventListener("submit", (e) => {
+      e.preventDefault();
 
-    const nome = document.getElementById("nome").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const senha = document.getElementById("senha").value.trim();
-    const codigo = inputCodigo.value.trim();
+      const nome = document.getElementById("nome").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const senha = document.getElementById("senha").value.trim();
+      const codigo = inputCodigo ? inputCodigo.value.trim().toUpperCase() : "";
 
-    let user;
-
-    if (roleTemp === "professor" || roleTemp === "docente") {
-      // Cadastro de Professor
-      user = {
-        nome,
-        email,
-        senha,
-        role: "docente"
-      };
-    } else {
-      // Cadastro de Aluno (exige código)
-      const turma = DB.getTurmaPorCodigo(codigo);
-
-      if (!turma) {
-        alert("Código da turma inválido!");
+      // Verifica se já existe um usuário com esse email
+      const usuarios = DB.getUsuarios();
+      if (usuarios.find(u => u.email === email)) {
+        alert("Este email já está cadastrado!");
         return;
       }
 
-      user = {
-        nome,
-        email,
-        senha,
-        role: "aluno",
-        turma: turma.nome
-      };
+      if (roleTemp === "professor" || roleTemp === "docente") {
+        // CADASTRO DOCENTE (PROFESSOR)
+        DB.addUsuario({ 
+          nome, 
+          email, 
+          senha, 
+          role: "docente" 
+        });
+      } else {
+        // CADASTRO ALUNO COM VÍNCULO AUTOMÁTICO
+        const turma = DB.getTurmaPorCodigo(codigo);
 
-      DB.addAluno(turma.nome, nome);
-    }
+        if (!turma) {
+          alert("Código da turma inválido! Peça o código ao seu professor.");
+          return;
+        }
 
-    DB.addUsuario(user);
-    alert("Conta criada com sucesso!");
-    location.href = "login.html";
-  });
+        // 1. Cria a conta do usuário aluno (para o Login)
+        DB.addUsuario({
+          nome,
+          email,
+          senha,
+          role: "aluno",
+          turma: turma.nome
+        });
+
+        // 2. MATRÍCULA AUTOMÁTICA (Para o Dashboard)
+        // Adiciona o aluno diretamente na lista de membros da turma
+        // Assim, ele aparece no select do professor imediatamente
+        DB.addAluno(turma.nome, nome);
+      }
+
+      alert("Conta criada com sucesso! Redirecionando para o login...");
+      window.location.href = "login.html";
+    });
+  }
 });
-
-function irLogin() {
-  location.href = "login.html";
-}

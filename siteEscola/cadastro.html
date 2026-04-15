@@ -2,42 +2,52 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastro - Sistema Escolar</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body class="center aluno">
 
-<div class="card-login">
-  <img src="img/logo.png" class="logo" alt="Logo">
+  <div class="card-login">
+    <img src="img/logo.png" class="logo" alt="Logo">
 
-  <h2>Criar Conta</h2>
-  <p style="color: rgba(255,255,255,0.5); margin-bottom: 20px;">Preencha os dados abaixo</p>
+    <h2>Criar Conta</h2>
+    <p style="color: rgba(255,255,255,0.5); margin-bottom: 20px;">Preencha os dados abaixo</p>
 
-  <form id="formCadastro">
-    <label>Nome Completo</label>
-    <input type="text" id="nome" required placeholder="Ex: Leonardo Silva">
+    <form id="formCadastro">
+      <div class="input-group">
+        <label for="nome">Nome Completo</label>
+        <input type="text" id="nome" required placeholder="Ex: Leonardo Silva">
+      </div>
 
-    <label>Email</label>
-    <input type="email" id="email" required placeholder="exemplo@escola.com">
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" required placeholder="exemplo@escola.com">
+      </div>
 
-    <label>Senha</label>
-    <input type="password" id="senha" required placeholder="Crie uma senha">
+      <div class="input-group">
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" required placeholder="Crie uma senha">
+      </div>
 
-    <div id="area-turma">
-      <label>Código da Turma</label>
-      <input type="text" id="codigoTurma" placeholder="Peça o código ao professor">
-    </div>
+      <div id="area-turma" class="input-group">
+        <label for="codigoTurma">Código da Turma</label>
+        <input type="text" id="codigoTurma" placeholder="Peça o código ao professor">
+      </div>
 
-    <button type="submit">Finalizar Cadastro</button>
-  </form>
+      <button type="submit">Finalizar Cadastro</button>
+    </form>
 
-  <p class="link-text" onclick="window.location.href='login.html'">Já tenho uma conta. <strong>Fazer Login</strong></p>
-</div>
+    <p class="auth-footer">
+  Já possui uma conta? 
+  <a href="login.html" class="auth-link"><strong>Fazer login</strong></a>
+</p>
+  </div>
 
-<script src="js/db.js"></script>
-<script src="js/theme.js"></script>
-<script src="js/cadastro.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/cadastro.js"></script>
 
 </body>
 </html>

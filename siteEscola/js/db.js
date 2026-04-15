@@ -1,103 +1,126 @@
 const DB = (() => {
-
+  // Carrega os dados ou inicia um objeto vazio estruturado
   let data = JSON.parse(localStorage.getItem("db")) || {
     usuarios: [],
     turmas: []
   };
 
-  function salvar() {
-    localStorage.setItem("db", JSON.stringify(data));
-  }
+  // Salva o estado atual no localStorage
+  const salvar = () => localStorage.setItem("db", JSON.stringify(data));
 
-  function gerarCodigo() {
-    return Math.random().toString(36).substring(2, 8).toUpperCase();
-  }
+  // Gera códigos únicos para as turmas (Ex: A1B2C3)
+  const gerarCodigo = () => Math.random().toString(36).substring(2, 8).toUpperCase();
 
-  function criarTurma(nome) {
-    const codigo = gerarCodigo();
+  return {
+    criarTurma: (nome) => {
+      const codigo = gerarCodigo();
+      data.turmas.push({
+        nome,
+        codigo,
+        materias: [],
+        alunos: []
+      });
+      salvar();
+      return codigo;
+    },
 
-    data.turmas.push({
-      nome,
-      codigo,
-      materias: [],
-      alunos: []
-    });
+    getTurmas: () => data.turmas,
+    
+    getTurma: (nome) => data.turmas.find(t => t.nome === nome),
+    
+    getTurmaPorCodigo: (codigo) => data.turmas.find(t => t.codigo === codigo),
+    
+    addUsuario: (user) => {
+      data.usuarios.push(user);
+      salvar();
+    },
+    
+    getUsuarios: () => data.usuarios,
 
-    salvar();
-    return codigo;
-  }
+    /**
+     * MATRÍCULA: Valida se o aluno existe no sistema e se já não está na turma
+     */
+    addAluno: (turmaNome, nome) => {
+      const turma = data.turmas.find(t => t.nome === turmaNome);
+      if (!turma) return false;
 
-  function getTurmas() {
-    return data.turmas;
-  }
+      const nomeLimpo = nome.trim();
+      
+      // Valida se o aluno criou conta
+      const usuarioNoSistema = data.usuarios.find(u => 
+        u.nome.toLowerCase() === nomeLimpo.toLowerCase() && u.role === "aluno"
+      );
 
-  function getTurma(nome) {
-    return data.turmas.find(t => t.nome === nome);
-  }
+      if (!usuarioNoSistema) {
+        alert(`Erro: O aluno "${nomeLimpo}" não possui uma conta no sistema!`);
+        return false;
+      }
 
-  function getTurmaPorCodigo(codigo) {
-    return data.turmas.find(t => t.codigo === codigo);
-  }
+      // Valida duplicata
+      const jaMatriculado = turma.alunos.find(a => 
+        a.nome.toLowerCase() === nomeLimpo.toLowerCase()
+      );
 
-  function addUsuario(user) {
-    data.usuarios.push(user);
-    salvar();
-  }
+      if (jaMatriculado) {
+        alert(`Erro: O aluno "${nomeLimpo}" já está matriculado nesta turma!`);
+        return false;
+      }
 
-  function getUsuarios() {
-    return data.usuarios;
-  }
+      // Prepara o boletim do aluno com as matérias da turma
+      const notas = {};
+      turma.materias.forEach(m => {
+        notas[m] = { b1: 0, b2: 0, b3: 0, b4: 0, faltas: 0 };
+      });
 
-  function addAluno(turmaNome, nome) {
-    const turma = getTurma(turmaNome);
-    if (!turma) return;
-
-    const notas = {};
-    turma.materias.forEach(m => {
-      notas[m] = { b1: 0, b2: 0, b3: 0, b4: 0 };
-    });
-
-    turma.alunos.push({ nome, notas });
-    salvar();
-  }
-
-  function addMateria(turmaNome, materia) {
-    const turma = getTurma(turmaNome);
-    if (!turma) return;
-
-    if (!turma.materias.includes(materia)) {
-      turma.materias.push(materia);
-
-      turma.alunos.forEach(a => {
-        a.notas[materia] = { b1: 0, b2: 0, b3: 0, b4: 0 };
+      turma.alunos.push({ 
+        nome: usuarioNoSistema.nome, // Usa o nome oficial do cadastro
+        notas 
       });
 
       salvar();
-    }
-  }
+      return true;
+    },
 
-  function updateNota(turma, aluno, materia, campo, valor) {
-    const t = getTurma(turma);
-    const a = t.alunos.find(x => x.nome === aluno);
-    
-    // Garante que o objeto da matéria existe
-    if (!a.notas[materia]) {
-        a.notas[materia] = { b1: 0, b2: 0, b3: 0, b4: 0, faltas: 0 };
-    }
-    
-    a.notas[materia][campo] = Number(valor);
-    salvar();
-}
+    addMateria: (turmaNome, materia) => {
+      const turma = data.turmas.find(t => t.nome === turmaNome);
+      if (!turma) return;
+      
+      const matNome = materia.trim();
+      if (!turma.materias.includes(matNome)) {
+        turma.materias.push(matNome);
+        // Adiciona a nova matéria ao boletim de todos os alunos já matriculados
+        turma.alunos.forEach(a => {
+          if (!a.notas[matNome]) {
+            a.notas[matNome] = { b1: 0, b2: 0, b3: 0, b4: 0, faltas: 0 };
+          }
+        });
+        salvar();
+      }
+    },
 
-  return {
-    criarTurma,
-    getTurmas,
-    getTurma,
-    getTurmaPorCodigo,
-    addUsuario,
-    getUsuarios,
-    addAluno,
-    addMateria,
-    updateNota
+    updateNota: (turmaNome, alunoNome, materia, campo, valor) => {
+      const turma = data.turmas.find(t => t.nome === turmaNome);
+      const aluno = turma?.alunos.find(a => a.nome === alunoNome);
+      
+      if (aluno && aluno.notas[materia]) {
+        aluno.notas[materia][campo] = Number(valor);
+        salvar();
+      }
+    },
+
+    removerMateria: (turmaNome, materia) => {
+      const turma = data.turmas.find(t => t.nome === turmaNome);
+      if (!turma) return;
+      turma.materias = turma.materias.filter(m => m !== materia);
+      turma.alunos.forEach(a => delete a.notas[materia]);
+      salvar();
+    },
+
+    removerAluno: (turmaNome, alunoNome) => {
+      const turma = data.turmas.find(t => t.nome === turmaNome);
+      if (!turma) return;
+      turma.alunos = turma.alunos.filter(a => a.nome !== alunoNome);
+      salvar();
+    }
   };
 })();

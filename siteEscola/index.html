@@ -2,33 +2,33 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Escolha</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escolha seu Perfil</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body class="center aluno">
+<body class="center aluno"> <div class="card-login">
+    <h2>Quem é você?</h2>
+    <p style="color: rgba(255,255,255,0.5); margin-bottom: 20px;">Selecione seu perfil para continuar</p>
 
-<div class="card-login">
-  <h2>Quem é você?</h2>
+    <button class="tipo-btn" onclick="setTipo('aluno')">Sou Aluno</button>
+    <button class="tipo-btn" onclick="setTipo('professor')" style="margin-top: 15px;">Sou Professor</button>
+  </div>
 
-  <button class="tipo-btn" onclick="setTipo('aluno')">Aluno</button>
-  <button class="tipo-btn" onclick="setTipo('professor')">Professor</button>
-</div>
+  <script>
+    function setTipo(tipo) {
+      // Salva o papel temporário para o cadastro
+      localStorage.setItem("role_temp", tipo);
+      
+      // Troca a classe do body para mudar o background suavemente via CSS
+      document.body.className = "center " + tipo;
 
-<script>
-function setTipo(tipo){
-  localStorage.setItem("role_temp", tipo);
-  
-  // Aplica a classe na hora para disparar a transição do CSS
-  document.body.classList.remove('aluno', 'professor');
-  document.body.classList.add(tipo);
-
-  // Espera a animação de 350ms terminar antes de mudar a URL
-  setTimeout(() => {
-    location.href = "login.html";
-  }, 350);
-}
-</script>
+      // Pequena pausa para o usuário ver a troca do fundo antes de redirecionar
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 500);
+    }
+  </script>
 
 </body>
 </html>

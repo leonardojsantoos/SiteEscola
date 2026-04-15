@@ -2,81 +2,102 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Escolar</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="dashboard">
 
-<div class="header">
-  <h2 id="titulo"></h2>
-  <button onclick="logout()">Sair</button>
-</div>
-
-<div class="container">
-  <div class="grid">
-    
-    <div class="card">
-      <h3>Turma</h3>
-      <select id="turmaSelect" onchange="atualizarSeletores()"></select>
-      
-      <div id="exibirCodigoTurma" style="margin-top: 15px; font-size: 13px; font-weight: bold; color: var(--roxo);"></div>
+  <header class="header">
+    <div class="container flex-row" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+      <h2 id="titulo">Painel de Controle</h2>
+      <button onclick="logout()" class="btn-sair" style="width: auto; padding: 10px 20px;">Sair</button>
     </div>
-  
-    <div id="painel-professor" class="card">
-      <h3>Lançar Dados (Modo Planilha)</h3>
-      <label>Aluno</label>
-      <select id="alunoSelect"></select>
-      
-      <label>Matéria</label>
-      <select id="materiaSelect"></select>
-  
-      <div class="grid-notas-excel">
-          <input type="number" id="notaB1" placeholder="B1" min="0" max="10">
-          <input type="number" id="notaB2" placeholder="B2" min="0" max="10">
-          <input type="number" id="notaB3" placeholder="B3" min="0" max="10">
-          <input type="number" id="notaB4" placeholder="B4" min="0" max="10">
-          <input type="number" id="faltasInput" placeholder="Faltas" min="0">
+  </header>
+
+  <main class="container">
+    <div class="card card-top-bar" style="margin-bottom: 20px;">
+      <div class="flex-row" style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 15px;">
+          <label style="margin-bottom: 0;">Turma Ativa:</label>
+          <select id="turmaSelect" onchange="atualizarSeletores()" style="margin-bottom: 0; width: 200px;"></select>
+        </div>
+        <div id="exibirCodigoTurma" class="codigo-badge"></div>
       </div>
-      
-      <button onclick="salvarNotas()" style="width: 100%;">Atualizar Células</button>
-
-      <hr style="margin: 20px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.1);">
-      
-      <h3>Gerenciar Estrutura</h3>
-      <input id="nomeTurma" placeholder="Nova Turma">
-      <button onclick="criarTurma()">Criar Turma</button>
-      <br><br>
-      <input id="nomeMateria" placeholder="Nova Matéria">
-      <button onclick="addMateria()">Add Matéria</button>
-      <br><br>
-      <input id="nomeAluno" placeholder="Novo Aluno">
-      <button onclick="addAluno()">Add Aluno</button>
-    </div> 
-
-    <div class="card card-wide">
-      <h3>Boletim Geral</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Disciplina</th>
-            <th style="text-align: center;">B1</th>
-            <th style="text-align: center;">B2</th>
-            <th style="text-align: center;">B3</th>
-            <th style="text-align: center;">B4</th>
-            <th style="text-align: center;">Faltas</th>
-            <th style="text-align: center;">Média</th>
-            <th style="text-align: center;">Situação</th>
-          </tr>
-        </thead>
-        <tbody id="boletim-corpo"></tbody>
-      </table>
     </div>
-  </div>
-</div>
 
-<script src="js/db.js"></script>
-<script src="js/theme.js"></script>
-<script src="js/app.js"></script>
+    <div class="grid-main">
+      
+      <div id="painel-professor" class="card">
+        <h3>📝 Lançar Notas e Faltas</h3>
+        
+        <label>Aluno</label>
+        <select id="alunoSelect">
+            <option value="">Selecione o aluno...</option>
+        </select>
+        
+        <label>Matéria</label>
+        <select id="materiaSelect"></select>
+
+        <div class="grid-notas-excel" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 15px;">
+          <div><label>B1</label><input type="number" id="notaB1" placeholder="0.0" min="0" max="10"></div>
+          <div><label>B2</label><input type="number" id="notaB2" placeholder="0.0" min="0" max="10"></div>
+          <div><label>B3</label><input type="number" id="notaB3" placeholder="0.0" min="0" max="10"></div>
+          <div><label>B4</label><input type="number" id="notaB4" placeholder="0.0" min="0" max="10"></div>
+          <div><label>Faltas</label><input type="number" id="faltasInput" placeholder="0" min="0"></div>
+        </div>
+        
+        <button class="btn-primary" onclick="salvarNotas()">Atualizar Boletim</button>
+      </div>
+
+      <div id="painel-gestao" class="card">
+        <h3>⚙️ Gerenciar Estrutura</h3>
+        
+        <div class="section-gestao" style="margin-bottom: 20px;">
+          <label>Nova Turma</label>
+          <div style="display: flex; gap: 10px;">
+            <input id="nomeTurma" placeholder="Ex: 3º Ano A" style="margin-bottom: 0;">
+            <button onclick="criarTurma()" style="width: 80px;">Criar</button>
+          </div>
+        </div>
+
+        <div class="section-gestao">
+          <label>Nova Matéria</label>
+          <div style="display: flex; gap: 10px;">
+            <input id="nomeMateria" placeholder="Ex: Matemática" style="margin-bottom: 0;">
+            <button onclick="addMateria()" style="width: 80px;">Add</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-wide" style="grid-column: 1 / -1;">
+        <h3>📊 Boletim Geral</h3>
+        <div class="table-container" style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th style="text-align: left;">Disciplina</th>
+                <th>B1</th>
+                <th>B2</th>
+                <th>B3</th>
+                <th>B4</th>
+                <th>Faltas</th>
+                <th>Média</th>
+                <th>Situação</th>
+              </tr>
+            </thead>
+            <tbody id="boletim-corpo">
+              </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/db.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/app.js"></script>
 
 </body>
 </html>
