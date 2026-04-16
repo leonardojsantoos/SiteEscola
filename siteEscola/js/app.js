@@ -2,23 +2,20 @@ const user = JSON.parse(localStorage.getItem("user"));
 if (!user) location.href = "login.html";
 
 const LIMITE_FALTAS = 25;
+let instGrafico = null;
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Define o título do painel (Professor ou Aluno)
     const titulo = document.getElementById("titulo");
     if (titulo) {
         titulo.textContent = `Painel ${user.role === 'docente' ? 'do Professor' : 'do Aluno'} - ${user.nome}`;
     }
-    
-    // Restrição de interface: Remove painéis de gestão se for Aluno
+
     if (user.role === "aluno") {
         document.getElementById("painel-professor")?.remove();
         document.getElementById("painel-gestao")?.remove();
         document.getElementById("exibirCodigoTurma")?.remove();
-        
-        // No dashboard do aluno, o seletor de turma fica desativado ou escondido
         const select = document.getElementById("turmaSelect");
-        if(select) select.disabled = true;
+        if (select) select.disabled = true;
     }
 
     carregarTurmas();
@@ -29,13 +26,11 @@ function carregarTurmas() {
     if (!select) return;
 
     const turmas = DB.getTurmas();
-    
-    // Aluno só vê a própria turma (vinculada no cadastro), Professor vê todas
-    const turmasFiltradas = user.role === "aluno" 
-        ? turmas.filter(t => t.nome === user.turma) 
+    const turmasFiltradas = user.role === "aluno"
+        ? turmas.filter(t => t.nome === user.turma)
         : turmas;
 
-    select.innerHTML = turmasFiltradas.length 
+    select.innerHTML = turmasFiltradas.length
         ? turmasFiltradas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join("")
         : '<option value="">Nenhuma turma encontrada</option>';
 
@@ -50,7 +45,6 @@ function atualizarSeletores() {
     const turma = DB.getTurma(turmaNome);
     if (!turma) return;
 
-    // Interface do Professor
     if (user.role === 'docente') {
         const badge = document.getElementById("exibirCodigoTurma");
         if (badge) badge.textContent = `CÓDIGO: ${turma.codigo}`;
@@ -59,11 +53,9 @@ function atualizarSeletores() {
         const materiaSel = document.getElementById("materiaSelect");
 
         if (alunoSel) {
-            // Aqui aparecem os alunos que se cadastraram com o código da turma
-            alunoSel.innerHTML = turma.alunos.length 
+            alunoSel.innerHTML = turma.alunos.length
                 ? turma.alunos.map(a => `<option value="${a.nome}">${a.nome}</option>`).join("")
                 : '<option value="">Sem alunos cadastrados</option>';
-            
             alunoSel.onchange = renderBoletim;
         }
 
@@ -73,7 +65,6 @@ function atualizarSeletores() {
                 : '<option value="">Sem matérias</option>';
         }
     }
-
     renderBoletim();
 }
 
@@ -94,19 +85,12 @@ function salvarNotas() {
         faltas: document.getElementById("faltasInput").value || 0
     };
 
-    // Salva no Banco de Dados
     Object.entries(dados).forEach(([campo, valor]) => {
         DB.updateNota(turma, aluno, materia, campo, valor);
     });
 
-    alert(`Notas de ${aluno} atualizadas com sucesso!`);
+    alert(`Sucesso! Boletim de ${aluno} atualizado.`);
     renderBoletim();
-    
-    // Limpa os campos de input após salvar
-    ["notaB1", "notaB2", "notaB3", "notaB4", "faltasInput"].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = "";
-    });
 }
 
 function renderBoletim() {
@@ -117,7 +101,6 @@ function renderBoletim() {
     const turma = DB.getTurma(selectTurma.value);
     if (!turma) return;
 
-    // Se for aluno, busca os dados dele. Se for professor, busca o aluno selecionado no select.
     const alunoSel = document.getElementById("alunoSelect");
     let nomeParaExibir = user.role === "aluno" ? user.nome : (alunoSel ? alunoSel.value : "");
 
@@ -125,9 +108,8 @@ function renderBoletim() {
     const aluno = turma.alunos.find(a => a.nome === nomeParaExibir);
 
     if (aluno) {
-        // Cabeçalho com o nome do aluno no boletim
         const trHeader = document.createElement("tr");
-        trHeader.innerHTML = `<td colspan="8" style="background:rgba(108, 92, 231, 0.1); font-weight:bold; color:var(--roxo); text-align:left;">👤 ALUNO: ${aluno.nome.toUpperCase()}</td>`;
+        trHeader.innerHTML = `<td colspan="8" style="background:rgba(108, 92, 231, 0.1); font-weight:bold; color:#6c5ce7; text-align:left; padding: 10px;">👤 ALUNO: ${aluno.nome.toUpperCase()}</td>`;
         tbody.appendChild(trHeader);
 
         turma.materias.forEach(materia => {
@@ -150,21 +132,98 @@ function renderBoletim() {
                 </td>`;
             tbody.appendChild(tr);
         });
+
+        gerarAnaliseCientifica(aluno);
     } else {
-        tbody.innerHTML = "<tr><td colspan='8'>Aguardando seleção de aluno ou matrícula automática.</td></tr>";
+        tbody.innerHTML = "<tr><td colspan='8'>Aguardando seleção de aluno...</td></tr>";
     }
 }
 
-// --- Funções de Gestão Estrutural ---
+function gerarAnaliseCientifica(aluno) {
+    const canvas = document.getElementById('graficoCorrelacao');
+    const container = document.getElementById('cards-insights');
+
+    if (!canvas || !container) return;
+
+    container.innerHTML = "";
+    const labels = Object.keys(aluno.notas);
+    if (labels.length === 0) return;
+
+    const dadosMedias = [];
+    const dadosFaltas = [];
+
+    labels.forEach(materia => {
+        const n = aluno.notas[materia];
+        const notas = [Number(n.b1), Number(n.b2), Number(n.b3), Number(n.b4)];
+        const soma = notas.reduce((a, b) => a + b, 0);
+        const media = soma / 4;
+        const faltas = Number(n.faltas);
+        const taxaPresenca = (((200 - faltas) / 200) * 100).toFixed(1);
+
+        dadosMedias.push(media.toFixed(1));
+        dadosFaltas.push(faltas);
+
+        let config = { cor: "#00d084", bg: "rgba(0, 208, 132, 0.1)", titulo: "PLENO", desc: "", acao: "" };
+
+        if (faltas >= LIMITE_FALTAS) {
+            config = { cor: "#ff4d4d", bg: "rgba(255, 77, 77, 0.15)", titulo: "RETIDO", desc: `⚠️ <b>REPROVADO POR FALTAS:</b> O aluno excedeu o limite legal (${faltas}).`, acao: "Encaminhar para reunião de conselho." };
+        } else if (media < 6) {
+            const faltam = (24 - soma).toFixed(1);
+            config = { cor: "#ff4d4d", bg: "rgba(255, 77, 77, 0.15)", titulo: "CRÍTICO", desc: `❌ <b>INSUFICIENTE:</b> Média ${media.toFixed(1)}. Faltam <b>${faltam} pontos</b> para a aprovação anual.`, acao: "Reforço imediato e revisão de conteúdo." };
+        } else if (media < 7.5) {
+            config = { cor: "#ffa500", bg: "rgba(255, 165, 0, 0.15)", titulo: "REGULAR", desc: `🟡 <b>LIMÍTROFE:</b> Desempenho no limite mínimo. Risco de queda nos próximos bimestres.`, acao: "Incentivar participação e tarefas extras." };
+        } else {
+            config = { cor: "#00d084", bg: "rgba(0, 208, 132, 0.1)", titulo: "EXCELENTE", desc: `✅ <b>PLENO:</b> Domínio sólido do conteúdo e frequência exemplar (${taxaPresenca}%).`, acao: "Manter o ritmo e atuar como monitor." };
+        }
+
+        container.innerHTML += `
+            <div style="background:${config.bg} !important; padding:20px; border-radius:12px; border-left:8px solid ${config.cor} !important; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: flex; flex-direction: column; height: 100%;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <b style="color:${config.cor} !important; text-transform:uppercase; font-size:12px;">${materia}</b>
+                    <span style="background:${config.cor}; color:#000; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:bold;">${config.titulo}</span>
+                </div>
+                <p style="color:#fff !important; font-size:13px; line-height:1.4; flex-grow:1; margin-bottom:15px;">${config.desc}</p>
+                <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:6px; margin-bottom:15px; border:1px solid rgba(255,255,255,0.1);">
+                    <small style="color:${config.cor}; font-weight:bold; font-size:10px;">AÇÃO:</small><br>
+                    <small style="color:#eee; font-size:11px;">${config.acao}</small>
+                </div>
+                <div style="display:flex; justify-content:space-between; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
+                    <span style="font-size:11px; color:#aaa;">Média: <b style="color:#fff;">${media.toFixed(1)}</b></span>
+                    <span style="font-size:11px; color:#aaa;">Presença: <b style="color:#fff;">${taxaPresenca}%</b></span>
+                </div>
+            </div>`;
+    });
+
+    if (instGrafico) instGrafico.destroy();
+    instGrafico = new Chart(canvas.getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                { label: 'Média', data: dadosMedias, backgroundColor: '#6c5ce7', borderRadius: 4 },
+                { label: 'Faltas', data: dadosFaltas, backgroundColor: 'rgba(255, 255, 255, 0.15)', borderRadius: 4 }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true, max: 15, ticks: { color: '#888' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                x: { ticks: { color: '#fff' }, grid: { display: false } }
+            },
+            plugins: { legend: { labels: { color: '#fff' } } }
+        }
+    });
+}
 
 function criarTurma() {
     const el = document.getElementById("nomeTurma");
     const nome = el?.value.trim();
     if (nome) {
-        const cod = DB.criarTurma(nome); // Gera o código automático no DB
+        const cod = DB.criarTurma(nome);
         el.value = "";
         carregarTurmas();
-        alert(`Sucesso!\nTurma: ${nome}\nCódigo para Alunos: ${cod}`);
+        alert(`Sucesso! Código: ${cod}`);
     }
 }
 
@@ -176,17 +235,10 @@ function addMateria() {
         DB.addMateria(turma, mat);
         el.value = "";
         atualizarSeletores();
-        alert(`Matéria ${mat} adicionada à turma!`);
     }
 }
 
-// Logout do sistema
 function logout() {
-    // Limpa os dados da sessão
     localStorage.removeItem("user");
-    localStorage.removeItem("role_temp");
-    
-    // Redireciona para a tela de ESCOLHA (aluno ou professor)
-    // Se o seu arquivo se chamar index.html ou escolha.html, mude abaixo:
-    location.href = "index.html"; 
+    location.href = "index.html";
 }
