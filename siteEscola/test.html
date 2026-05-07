@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Testes</title>
+</head>
+<body style="display:none;">
+
+    <script>
+        localStorage.setItem("user", JSON.stringify({
+            nome: "Teste",
+            role: "docente",
+            turma: "1A"
+        }));
+    </script>
+
+    <script src="js/app.js"></script>
+    <script src="js/test/dashboard.test.js"></script>
+
+</body>
+</html>

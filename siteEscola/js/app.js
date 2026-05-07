@@ -1,7 +1,7 @@
 const user = JSON.parse(localStorage.getItem("user"));
 if (!user) location.href = "login.html";
 
-const LIMITE_FALTAS = 25;
+window.LIMITE_FALTAS = 25;
 let instGrafico = null;
 
 document.addEventListener("DOMContentLoaded", () => {
