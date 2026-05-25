@@ -4,7 +4,11 @@ if (!user) location.href = "login.html";
 window.LIMITE_FALTAS = 25;
 let instGrafico = null;
 
-document.addEventListener("DOMContentLoaded", () => {
+// Modifique essa função inicial adicionando o "async" e o "await DB.carregarDados()"
+document.addEventListener("DOMContentLoaded", async () => {
+    // Busca os dados atualizados da nuvem para exibir na tela
+    await DB.carregarDados();
+
     const titulo = document.getElementById("titulo");
     if (titulo) {
         titulo.textContent = `Painel ${user.role === 'docente' ? 'do Professor' : 'do Aluno'} - ${user.nome}`;
@@ -68,7 +72,7 @@ function atualizarSeletores() {
     renderBoletim();
 }
 
-function salvarNotas() {
+async function salvarNotas() {
     const turma = document.getElementById("turmaSelect")?.value;
     const aluno = document.getElementById("alunoSelect")?.value;
     const materia = document.getElementById("materiaSelect")?.value;
@@ -85,11 +89,12 @@ function salvarNotas() {
         faltas: document.getElementById("faltasInput").value || 0
     };
 
-    Object.entries(dados).forEach(([campo, valor]) => {
-        DB.updateNota(turma, aluno, materia, campo, valor);
-    });
+    // Usando loop for para aguardar a internet responder campo por campo sem bugar
+    for (const [campo, valor] of Object.entries(dados)) {
+        await DB.updateNota(turma, aluno, materia, campo, valor);
+    }
 
-    alert(`Sucesso! Boletim de ${aluno} atualizado.`);
+    alert(`Sucesso! Boletim de ${aluno} atualizado na nuvem.`);
     renderBoletim();
 }
 
@@ -216,23 +221,23 @@ function gerarAnaliseCientifica(aluno) {
     });
 }
 
-function criarTurma() {
+async function criarTurma() {
     const el = document.getElementById("nomeTurma");
     const nome = el?.value.trim();
     if (nome) {
-        const cod = DB.criarTurma(nome);
+        const cod = await DB.criarTurma(nome);
         el.value = "";
         carregarTurmas();
-        alert(`Sucesso! Código: ${cod}`);
+        alert(`Sucesso! Turma criada na nuvem. Código: ${cod}`);
     }
 }
 
-function addMateria() {
+async function addMateria() {
     const turma = document.getElementById("turmaSelect")?.value;
     const el = document.getElementById("nomeMateria");
     const mat = el?.value.trim();
     if (mat && turma) {
-        DB.addMateria(turma, mat);
+        await DB.addMateria(turma, mat);
         el.value = "";
         atualizarSeletores();
     }
