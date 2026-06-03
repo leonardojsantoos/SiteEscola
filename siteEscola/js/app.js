@@ -187,15 +187,20 @@ function gerarAnaliseCientifica(aluno) {
                     <b style="color:${config.cor} !important; text-transform:uppercase; font-size:12px;">${materia}</b>
                     <span style="background:${config.cor}; color:#000; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:bold;">${config.titulo}</span>
                 </div>
-                <p style="color:#fff !important; font-size:13px; line-height:1.4; flex-grow:1; margin-bottom:15px;">${config.desc}</p>
+                <p style="color:#222 !important; font-size:13px; line-height:1.4; flex-grow:1; margin-bottom:15px;">${config.desc}</p>
                 <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:6px; margin-bottom:15px; border:1px solid rgba(255,255,255,0.1);">
                     <small style="color:${config.cor}; font-weight:bold; font-size:10px;">AÇÃO:</small><br>
-                    <small style="color:#eee; font-size:11px;">${config.acao}</small>
+                    <small style="color:#222; font-size:11px;">${config.acao}</small>
                 </div>
-                <div style="display:flex; justify-content:space-between; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
-                    <span style="font-size:11px; color:#aaa;">Média: <b style="color:#fff;">${media.toFixed(1)}</b></span>
-                    <span style="font-size:11px; color:#aaa;">Presença: <b style="color:#fff;">${taxaPresenca}%</b></span>
-                </div>
+                <div style="display:flex; justify-content:space-between; border-top:1px solid #e5e7eb; padding-top:10px;">
+    <span style="font-size:11px; color:#555;">
+        Média: <b style="color:#222;">${media.toFixed(1)}</b>
+    </span>
+
+    <span style="font-size:11px; color:#555;">
+        Presença: <b style="color:#222;">${taxaPresenca}%</b>
+    </span>
+</div>
             </div>`;
     });
 
@@ -206,7 +211,7 @@ function gerarAnaliseCientifica(aluno) {
             labels: labels,
             datasets: [
                 { label: 'Média', data: dadosMedias, backgroundColor: '#6c5ce7', borderRadius: 4 },
-                { label: 'Faltas', data: dadosFaltas, backgroundColor: 'rgba(255, 255, 255, 0.15)', borderRadius: 4 }
+                { label: 'Faltas', data: dadosFaltas, backgroundColor: '#ff4d4d', borderRadius: 4 }
             ]
         },
         options: {

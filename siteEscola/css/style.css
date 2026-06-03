@@ -26,7 +26,7 @@ body {
 body.aluno { background-image: var(--bg-aluno) !important; }
 body.professor { background-image: var(--bg-professor) !important; }
 body.escolha { background-image: var(--bg-escolha) !important; }
-body.dashboard { background: #0f1115; background-image: none; }
+body.dashboard {background: #f5f7fb; background-image: none; color: #222; }
 
 /* LAYOUT DE AUTENTICAÇÃO (LOGIN/CADASTRO/ESCOLHA) */
 body.center {
@@ -155,7 +155,7 @@ input:focus, select:focus {
 
 /* --- DASHBOARD FORMATADO --- */
 .header {
-  background: rgba(20, 22, 26, 0.8);
+  background: rgb(255, 255, 255);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255,255,255,0.05);
   padding: 15px 0;
@@ -166,16 +166,24 @@ input:focus, select:focus {
 
 .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
-.card { 
-  background: rgba(255, 255, 255, 0.03); 
-  backdrop-filter: blur(15px); 
-  border-radius: 20px; 
-  padding: 25px; 
-  border: 1px solid rgba(255, 255, 255, 0.08); 
+.card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 25px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 20px rgba(0,0,0,.05);
+  color: #222;
   height: 100%;
 }
 
-.card h3 { margin-bottom: 20px; font-size: 18px; color: #a29bfe; display: flex; align-items: center; gap: 10px; }
+.card h3 {
+  margin-bottom: 20px;
+  font-size: 18px;
+  color: var(--roxo);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
 .card-top-bar { margin: 20px 0; }
 
@@ -189,53 +197,58 @@ input:focus, select:focus {
 .card-wide { grid-column: 1 / -1; }
 
 /* GRID DE NOTAS ESTILO EXCEL */
-.grid-notas-excel { 
-  display: grid; 
-  grid-template-columns: repeat(5, 1fr); 
-  gap: 1px; 
-  background: rgba(255, 255, 255, 0.1); 
-  margin: 15px 0; 
-  border-radius: 12px; 
-  overflow: hidden; 
-  border: 1px solid rgba(255,255,255,0.1);
+.grid-notas-excel {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: #e5e7eb;
+  margin: 15px 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #d1d5db;
 }
 
 .grid-notas-excel label {
-  background: rgba(108, 92, 231, 0.15);
+  background: #f3f0ff;
+  color: var(--roxo);
   margin-bottom: 0;
   padding: 8px;
   text-align: center;
   font-size: 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid #dcd3ff;
 }
 
-.grid-notas-excel input { 
-  margin-bottom: 0 !important; 
-  border-radius: 0 !important; 
-  text-align: center; 
-  background: #15181d !important; 
+.grid-notas-excel input {
+  margin-bottom: 0 !important;
+  border-radius: 0 !important;
+  text-align: center;
+  background: white !important;
+  color: #222 !important;
   border: none !important;
   font-weight: bold;
   font-family: 'Courier New', Courier, monospace;
 }
 
-.grid-notas-excel input:focus { background: #1e2229 !important; color: var(--roxo); }
+.grid-notas-excel input:focus {
+  background: #f8f9ff !important;
+  color: var(--roxo);
+}
 
 /* TABELAS */
-.table-container { border-radius: 15px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
-table { width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.1); }
-th { background: rgba(108, 92, 231, 0.1); padding: 15px; text-align: center; font-size: 12px; color: #a29bfe; text-transform: uppercase; }
-td { padding: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center; font-size: 14px; }
-tr:hover { background: rgba(255,255,255,0.02); }
+.table-container { border-radius: 15px; overflow: hidden; border: 1px solid #e5e7eb; }
+table { width: 100%; border-collapse: collapse; background: white; }
+th { background: #f3f4f6; padding: 15px; text-align: center; font-size: 12px; color: #555; text-transform: uppercase; }
+td {padding: 14px; border-bottom: 1px solid #ececec; text-align: center; font-size: 14px; color: #333; }
+tr:hover { background: #f8f9ff; }
 
 /* BADGES */
-.codigo-badge { 
-  background: rgba(108, 92, 231, 0.15); 
-  padding: 10px 20px; 
-  border-radius: 100px; 
-  color: #a29bfe; 
-  font-weight: 800; 
-  border: 1px solid rgba(108, 92, 231, 0.3);
+.codigo-badge {
+  background: #f3f0ff;
+  padding: 10px 20px;
+  border-radius: 100px;
+  color: var(--roxo);
+  font-weight: 800;
+  border: 1px solid #dcd3ff;
   font-family: monospace;
   font-size: 14px;
 }
@@ -315,4 +328,118 @@ tr:hover { background: rgba(255,255,255,0.02); }
 
 .section-gestao button {
   height: 45px;
+}
+
+/* LOGIN E CADASTRO APENAS */
+
+.card-auth {
+  width: 100%;
+  max-width: 850px;
+  min-height: 480px;
+
+  display: flex;
+  overflow: hidden;
+
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+
+  color: black;
+}
+
+.login-banner {
+  width: 45%;
+
+  background: linear-gradient(
+    135deg,
+    #8b6fff,
+    #6C5CE7,
+    #5b4be0
+  );
+
+  color: white;
+
+  padding: 60px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-banner h1 {
+  color: white;
+  font-size: 42px;
+  margin-bottom: 15px;
+}
+
+.login-banner p {
+  color: rgba(255,255,255,.85);
+  font-size: 15px;
+}
+
+.login-form {
+  width: 55%;
+  padding: 50px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-form .logo {
+  margin: 0 auto 20px;
+}
+
+.login-form h2 {
+  text-align: center;
+}
+
+.subtitulo {
+  text-align: center;
+  color: #777 !important;
+  margin-bottom: 25px !important;
+}
+
+.login-form .auth-footer {
+  color: #777;
+}
+
+@media (max-width: 950px) {
+  .card-auth {
+    flex-direction: column;
+    max-width: 500px;
+    min-height: auto;
+  }
+
+  .login-banner,
+  .login-form {
+    width: 100%;
+  }
+
+  .login-banner {
+    text-align: center;
+    padding: 40px;
+  }
+}
+
+.dashboard h2,
+.dashboard h3,
+.dashboard label {
+  color: #222;
+}
+
+.dashboard select,
+.dashboard input {
+  background: white;
+  border: 1px solid #d1d5db;
+}
+
+.dashboard select:focus,
+.dashboard input:focus {
+  background: white;
+  border-color: var(--roxo);
+}
+
+.dashboard .container {
+  color: #222;
 }

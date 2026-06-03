@@ -1,5 +1,8 @@
 const DB = (() => {
-  const URL_API = "https://kvdb.io/6P96486v763m729277b758/dados_sistema_escola";
+  const BIN_ID = "6a206496f5f4af5e29b3abcd";
+  const API_KEY = "$2a$10$5cqnNwFFvmS3Wv9e4kzLEOg6itKLpV6nL6P6DlBG7f1sQKGoZ.I26";
+
+  const URL_API = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
   let data = {
     usuarios: [],
@@ -50,28 +53,28 @@ const DB = (() => {
   // =========================
 
   const salvar = async () => {
-    salvarBackupLocal();
+  salvarBackupLocal();
 
-    try {
-      const resposta = await fetch(URL_API, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      });
+  try {
+    const resposta = await fetch(URL_API, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Master-Key": API_KEY
+      },
+      body: JSON.stringify(data)
+    });
 
-      if (!resposta.ok) {
-        throw new Error("Erro ao salvar na nuvem");
-      }
-
-      console.log("Dados sincronizados.");
-    } catch (e) {
-      console.warn(
-        "Nuvem indisponível. Dados salvos localmente."
-      );
+    if (!resposta.ok) {
+      throw new Error("Erro ao salvar na nuvem");
     }
-  };
+
+    console.log("Dados sincronizados no JSONBin.");
+
+  } catch (e) {
+    console.warn("Nuvem indisponível. Usando local.");
+  }
+};
 
   // =========================
   // API pública
@@ -79,35 +82,33 @@ const DB = (() => {
 
   return {
     carregarDados: async () => {
-      try {
-        const resposta = await fetch(URL_API);
-
-        if (!resposta.ok) {
-          throw new Error("Falha ao buscar dados");
-        }
-
-        const texto = await resposta.text();
-
-        // evita erro se vier vazio
-        if (!texto.trim()) {
-          carregarBackupLocal();
-          return;
-        }
-
-        const remoto = JSON.parse(texto);
-
-        data = {
-          usuarios: remoto.usuarios || [],
-          turmas: remoto.turmas || []
-        };
-
-        salvarBackupLocal();
-
-      } catch (e) {
-        console.warn("Usando backup local.");
-        carregarBackupLocal();
+  try {
+    const resposta = await fetch(URL_API, {
+      headers: {
+        "X-Master-Key": API_KEY
       }
-    },
+    });
+
+    if (!resposta.ok) {
+      throw new Error("Falha ao buscar dados");
+    }
+
+    const json = await resposta.json();
+
+    const remoto = json.record || { usuarios: [], turmas: [] };
+
+    data = {
+      usuarios: remoto.usuarios || [],
+      turmas: remoto.turmas || []
+    };
+
+    salvarBackupLocal();
+
+  } catch (e) {
+    console.warn("Usando backup local.");
+    carregarBackupLocal();
+  }
+},
 
     criarTurma: async (nome) => {
       nome = nome?.trim();
@@ -296,3 +297,14 @@ const DB = (() => {
     }
   };
 })();
+
+/*Testar api
+
+fetch("https://api.jsonbin.io/v3/b/6a206496f5f4af5e29b3abcd", {
+  headers: {
+    "X-Master-Key": "$2a$10$5cqnNwFFvmS3Wv9e4kzLEOg6itKLpV6nL6P6DlBG7f1sQKGoZ.I26"
+  }
+})
+.then(r => r.json())
+.then(console.log)
+.catch(console.error)*/

@@ -9,40 +9,62 @@
 
 <body class="center aluno">
 
-  <div class="card-login">
-    <img src="img/logo.png" class="logo" alt="Logo">
+  <div class="card-auth">
 
-    <h2>Criar Conta</h2>
-    <p style="color: rgba(255,255,255,0.5); margin-bottom: 20px;">Preencha os dados abaixo</p>
+    <div class="login-banner">
+      <h1>Bem-vindo!</h1>
+      <p>
+        Crie sua conta e tenha acesso ao sistema escolar.
+      </p>
+    </div>
 
-    <form id="formCadastro">
-      <div class="input-group">
-        <label for="nome">Nome Completo</label>
-        <input type="text" id="nome" required placeholder="Ex: Leonardo Silva">
-      </div>
+    <div class="login-form">
 
-      <div class="input-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" required placeholder="exemplo@email.com">
-      </div>
+      <img src="img/logo.png" class="logo" alt="Logo">
 
-      <div class="input-group">
-        <label for="senha">Senha</label>
-        <input type="password" id="senha" required placeholder="Crie uma senha">
-      </div>
+      <h2>Criar Conta</h2>
 
-      <div id="area-turma" class="input-group">
-        <label for="codigoTurma">Código da Turma</label>
-        <input type="text" id="codigoTurma" placeholder="Peça o código ao professor">
-      </div>
+      <p class="subtitulo">
+        Preencha os dados abaixo
+      </p>
 
-      <button class="btn-submit" type="submit">Finalizar Cadastro</button>
-    </form>
+      <form id="formCadastro">
 
-    <p class="auth-footer">
-  Já possui uma conta? 
-  <a href="login.html" class="auth-link"><strong>Fazer login</strong></a>
-</p>
+        <div class="input-group">
+          <label for="nome">Nome Completo</label>
+          <input type="text" id="nome" required placeholder="Nome">
+        </div>
+
+        <div class="input-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required placeholder="exemplo@email.com">
+        </div>
+
+        <div class="input-group">
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" required placeholder="Crie uma senha">
+        </div>
+
+        <div id="area-turma" class="input-group">
+          <label for="codigoTurma">Código da Turma</label>
+          <input type="text" id="codigoTurma" placeholder="Peça o código ao professor">
+        </div>
+
+        <button class="btn-submit" type="submit">
+          Finalizar Cadastro
+        </button>
+
+      </form>
+
+      <p class="auth-footer">
+        Já possui uma conta?
+        <a href="login.html" class="auth-link">
+          <strong>Fazer login</strong>
+        </a>
+      </p>
+
+    </div>
+
   </div>
 
   <script src="js/theme.js"></script>
