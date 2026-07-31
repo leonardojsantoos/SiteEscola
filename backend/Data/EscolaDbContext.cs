@@ -10,7 +10,6 @@ public class EscolaDbContext : DbContext
     {
     }
 
-
     public DbSet<Usuario> Usuarios { get; set; }
 
     public DbSet<Turma> Turmas { get; set; }
@@ -25,13 +24,15 @@ public class EscolaDbContext : DbContext
         modelBuilder.Entity<Usuario>()
             .HasOne(u => u.Turma)
             .WithMany(t => t.Usuarios)
-            .HasForeignKey(u => u.TurmaId);
+            .HasForeignKey(u => u.TurmaId)
+            .OnDelete(DeleteBehavior.Restrict);
 
 
         modelBuilder.Entity<Materia>()
             .HasOne(m => m.Turma)
             .WithMany(t => t.Materias)
-            .HasForeignKey(m => m.TurmaId);
+            .HasForeignKey(m => m.TurmaId)
+            .OnDelete(DeleteBehavior.Restrict);
 
 
         modelBuilder.Entity<Nota>()
@@ -44,6 +45,24 @@ public class EscolaDbContext : DbContext
         modelBuilder.Entity<Nota>()
             .HasOne(n => n.Materia)
             .WithMany(m => m.Notas)
-            .HasForeignKey(n => n.MateriaId);
+            .HasForeignKey(n => n.MateriaId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+        modelBuilder.Entity<Nota>()
+            .Property(n => n.B1)
+            .HasPrecision(5, 2);
+
+        modelBuilder.Entity<Nota>()
+            .Property(n => n.B2)
+            .HasPrecision(5, 2);
+
+        modelBuilder.Entity<Nota>()
+            .Property(n => n.B3)
+            .HasPrecision(5, 2);
+
+        modelBuilder.Entity<Nota>()
+            .Property(n => n.B4)
+            .HasPrecision(5, 2);
     }
 }

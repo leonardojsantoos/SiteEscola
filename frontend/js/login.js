@@ -1,35 +1,42 @@
-document.addEventListener("DOMContentLoaded", async () => {
-  // Puxa os dados da internet antes de verificar o login
-  await DB.carregarDados();
+document.addEventListener("DOMContentLoaded", () => {
 
-  const form = document.getElementById("formLogin");
-  const criar = document.getElementById("criarConta");
+    const form = document.getElementById("formLogin");
 
-  if (criar) {
-    criar.addEventListener("click", () => {
-      location.href = "cadastro.html";
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById("email").value.trim();
+        const senha = document.getElementById("senha").value.trim();
+
+        try {
+
+            const resposta = await fetch("http://localhost:5279/api/Login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email,
+                    senha
+                })
+            });
+
+            if (!resposta.ok) {
+                alert("Email ou senha inválidos.");
+                return;
+            }
+
+            const usuario = await resposta.json();
+
+            localStorage.setItem("user", JSON.stringify(usuario));
+
+            window.location.href = "dashboard.html";
+
+        } catch (erro) {
+            console.error(erro);
+            alert("Erro ao conectar com o servidor.");
+        }
+
     });
-  }
 
-  if (form) {
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      const email = document.getElementById("email").value.trim();
-      const senha = document.getElementById("senha").value.trim();
-
-      // Agora a lista de usuários estará preenchida com os dados da nuvem
-      const user = DB.getUsuarios().find(u =>
-        u.email === email && u.senha === senha
-      );
-
-      if (!user) {
-        alert("Email ou senha incorretos!");
-        return;
-      }
-
-      localStorage.setItem("user", JSON.stringify(user));
-      location.href = "dashboard.html";
-    });
-  }
 });

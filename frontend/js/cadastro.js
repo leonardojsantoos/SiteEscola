@@ -1,50 +1,62 @@
-document.addEventListener("DOMContentLoaded", async () => {
-  // Baixa os dados primeiro
-  await DB.carregarDados();
+document.addEventListener("DOMContentLoaded", () => {
+    const roleTemp = localStorage.getItem("role_temp");
 
-  const roleTemp = localStorage.getItem("role_temp");
-  const areaTurma = document.getElementById("area-turma");
-  const inputCodigo = document.getElementById("codigoTurma");
-  const formCadastro = document.getElementById("formCadastro");
+    const areaTurma = document.getElementById("area-turma");
+    const inputCodigo = document.getElementById("codigoTurma");
+    const form = document.getElementById("formCadastro");
 
-  if (roleTemp === "professor" || roleTemp === "docente") {
-    if (areaTurma) areaTurma.style.display = "none";
-    if (inputCodigo) inputCodigo.removeAttribute("required");
-  }
+    if (roleTemp === "professor") {
+        areaTurma.style.display = "none";
+    }
 
-  if (formCadastro) {
-    // Adicionamos o async aqui
-    formCadastro.addEventListener("submit", async (e) => {
-      e.preventDefault();
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-      const nome = document.getElementById("nome").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const senha = document.getElementById("senha").value.trim();
-      const codigo = inputCodigo ? inputCodigo.value.trim().toUpperCase() : "";
+        const nome = document.getElementById("nome").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const senha = document.getElementById("senha").value.trim();
 
-      const usuarios = DB.getUsuarios();
-      if (usuarios.find(u => u.email === email)) {
-        alert("Este email já está cadastrado!");
-        return;
-      }
+        let turmaId = null;
 
-      if (roleTemp === "professor" || roleTemp === "docente") {
-        // Colocamos await para salvar na internet
-        await DB.addUsuario({ nome, email, senha, role: "docente" });
-      } else {
-        const turma = DB.getTurmaPorCodigo(codigo);
-        if (!turma) {
-          alert("Código da turma inválido! Peça o código ao seu professor.");
-          return;
+        if (roleTemp !== "professor") {
+            const codigo = inputCodigo.value.trim().toUpperCase();
+
+            const respostaTurma = await fetch(
+                `http://localhost:5279/api/Turmas/codigo/${codigo}`
+            );
+
+            if (!respostaTurma.ok) {
+                alert("Código da turma inválido.");
+                return;
+            }
+
+            const turma = await respostaTurma.json();
+            turmaId = turma.id;
         }
 
-        // Colocamos await nos cadastros
-        await DB.addUsuario({ nome, email, senha, role: "aluno", turma: turma.nome });
-        await DB.addAluno(turma.nome, nome);
-      }
+        const resposta = await fetch(
+            "http://localhost:5279/api/Usuarios",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    nome,
+                    email,
+                    senha,
+                    role: roleTemp === "professor" ? "professor" : "aluno",
+                    turmaId
+                })
+            }
+        );
 
-      alert("Conta criada com sucesso! Redirecionando para o login...");
-      window.location.href = "login.html";
+        if (!resposta.ok) {
+            alert("Erro ao cadastrar usuário.");
+            return;
+        }
+
+        alert("Conta criada com sucesso!");
+        location.href = "login.html";
     });
-  }
 });

@@ -3,37 +3,38 @@ using backend.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-// Banco de dados SQL Server
 builder.Services.AddDbContext<EscolaDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
-// Controllers
 builder.Services.AddControllers();
 
-
-// OpenAPI
-builder.Services.AddOpenApi();
-
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-
-// Configuração do ambiente
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
-
 
 app.UseHttpsRedirection();
 
+app.UseCors("Frontend");
 
-// Rotas dos Controllers
 app.MapControllers();
-
 
 app.Run();
