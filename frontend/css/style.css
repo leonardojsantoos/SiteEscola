@@ -22,11 +22,35 @@ body {
   transition: background 0.5s ease;
 }
 
-/* CLASSES DE FUNDO DINÂMICO */
+/* --- REGRA CORRIGIDA --- */
+body {
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  color: var(--text-white);
+  background-color: #0f1115;
+  
+  /* Garante centralização e impede a repetição do fundo */
+  background-attachment: fixed;
+  background-position: center center !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  
+  line-height: 1.6;
+  transition: background 0.5s ease;
+}
+
+/* Telas de Autenticação / Escolha */
 body.aluno { background-image: var(--bg-aluno) !important; }
 body.professor { background-image: var(--bg-professor) !important; }
 body.escolha { background-image: var(--bg-escolha) !important; }
-body.dashboard {background: #f5f7fb; background-image: none; color: #222; }
+
+/* Dashboard - Força o fundo limpo e anula as imagens de login com !important */
+body.dashboard, 
+.dashboard {
+  background: #f5f7fb !important;
+  background-image: none !important;
+  color: #222 !important;
+}
 
 /* LAYOUT DE AUTENTICAÇÃO (LOGIN/CADASTRO/ESCOLHA) */
 body.center {
@@ -442,4 +466,30 @@ tr:hover { background: #f8f9ff; }
 
 .dashboard .container {
   color: #222;
+}
+
+/* CONTAINER PRINCIPAL (Garante que a área central use 100% da largura máxima) */
+.header .container,
+main.container {
+  max-width: 1400px; /* Aumentado para dar mais respiro nas laterais */
+  width: 100%;       /* Garante preenchimento total */
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* GRID SUPERIOR MEIO A MEIO (50% / 50%) */
+.grid-main { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr !important; /* Força 2 colunas de tamanhos idênticos */
+  gap: 25px; 
+  width: 100%; /* Garante que o grid estique até as bordas do container */
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+/* RESPONSIVIDADE (Celulares e Tablets) */
+@media (max-width: 850px) {
+  .grid-main {
+    grid-template-columns: 1fr !important; /* Empilha em telas pequenas */
+  }
 }

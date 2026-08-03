@@ -3,24 +3,30 @@
     const user = JSON.parse(localStorage.getItem("user"));
     const roleTemp = localStorage.getItem("role_temp");
     
-    // Verifica se estamos no Dashboard (ajustado para ser mais flexível)
+    // Identifica se está no Dashboard
     const isDashboard = window.location.pathname.includes('dashboard.html') || 
                         document.querySelector('.dashboard');
 
     if (isDashboard) {
-        // No dashboard removemos os backgrounds de login para focar nos dados
+        // No dashboard, quem manda é o ROLE do usuário que logou
+        const roleDashboard = (user?.role || "").toLowerCase();
+        const isProf = (roleDashboard === "docente" || roleDashboard === "professor");
+        
         document.body.classList.remove("aluno", "professor");
+        document.body.classList.add(isProf ? "professor" : "aluno");
         return; 
     }
 
-    // Define qual papel usar (o logado ou o temporário da escolha)
-    const role = user?.role || roleTemp;
+    // Nas telas de Login, Cadastro e Escolha:
+    // DÁ PRIORIDADE AO BOTÃO QUE FOI CLICADO (role_temp)
+    const role = roleTemp || user?.role;
 
     if (role) {
       document.body.classList.remove("aluno", "professor");
       
-      // Padroniza: docente/professor usa fundo de professor, o resto aluno
-      const classeFundo = (role === "docente" || role === "professor") ? "professor" : "aluno";
+      const roleStr = String(role).toLowerCase();
+      const classeFundo = (roleStr === "docente" || roleStr === "professor") ? "professor" : "aluno";
+      
       document.body.classList.add(classeFundo);
     }
   }
